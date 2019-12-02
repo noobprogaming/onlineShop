@@ -25,129 +25,59 @@ class PayController extends Controller
         $this->middleware('auth');
     }
 
-    public function pay() {
+    public function checkout($purchase_id) {
 
         $id = Auth::user()->id;
 
-        $usr_buyer = User::select('users.name', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code', 'cityloc.city_name', 'provinceloc.province_name')
+        $usr_buyer = User::select('users.name', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code', 'city.city_id', 'city.city_name', 'province.province_name')
+        ->distinct()
         ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
         ->join('postal', 'postal.postal_code', '=', 'location.postal_code')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id')
-        ->where('users.id', $id)->get();
+        ->join('city', 'city.city_id', '=', 'location.city_id')
+        ->join('province', 'province.province_id', '=', 'location.province_id')
+        ->where('users.id', $id)
+        ->get();
 
-        return view('pay', [
-            'usr_buyer' => $usr_buyer,
-        ]);
-    }
-
-    public function payCartList() {
-        $id = Auth::user()->id;
+        if ($usr_buyer->count() == 0) {
+            return redirect()->route('profileUpdate', $id)->with('status', 'Lengkapi profil!'); // return ke profil, tambah alamat
+        }
 
         $cartList = Purchase_item::select('users.name AS seller', 'purchase_item.amount', 'purchase_item.selling_price', 'item.item_id', 'item.name', 'item.weight')
         ->join('users', 'purchase_item.seller_id', '=', 'users.id')
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
         ->where('purchase_item.buyer_id', $id)->get();
 
-        $usr_buyer = User::select('location.city_id')
-        ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('postal', 'postal.postal_code', '=', 'location.postal_code')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id')
-        ->where('users.id', $id)->distinct()->get();
-
-        $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'cityloc.city_name', 'provinceloc.province_name')
+        $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
         ->join('users', 'purchase_item.seller_id', '=', 'users.id')
         ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id')
+        ->join('city', 'city.city_id', '=', 'location.city_id')
+        ->join('province', 'province.province_id', '=', 'location.province_id')
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
-        ->where('purchase_item.buyer_id', $id)->distinct()->get();
+        ->where('purchase_item.buyer_id', $id)
+        ->where('purchase_item.purchase_id', $purchase_id)
+        ->distinct()->get();
 
-        foreach($cartSeller as $n) {
-            echo "
-            <form action='".route('payStore')."' method='post'>
-            <div>
-                <div class='card-body shadow'>
-                    <p class='card-text'>Pelapak: ". $n['seller'] ."</p>
-                    <p class='card-text'>". $n['city_name'] ."</p>
-                    <p class='card-text'>". $n['province_name'] ."</p>
-                    ";
+        return view('checkout', [
+            'usr_buyer' => $usr_buyer,
+            'cartList' => $cartList,
+            'cartSeller' => $cartSeller,
+        ]);
+    }
 
-                    $total_price = 0;
-                    $total_weight = 0;
-                    foreach($cartList as $j) {
-                        if($n['seller'] == $j['seller']) {
-                            echo "
-                            <div>
-                                <div class='card-body shadow'>
-                                    <button class='fa fa-trash' onclick='deleteItem(". $j['item_id'] .")'></button>
-                                    <p class='card-text'>Nama: ". $j['name'] ."</p>
-                                    <p class='card-text'>Jumlah: ". $j['amount'] ."</p>
-                                    <p class='card-text'>Harga per item:
-                                        Rp". number_format($j['selling_price'],2,',','.') ."
-                                    </p>
-                                    <p class='card-text'>". number_format(($j['selling_price']*$j['amount']),2,',','.') ."</p>
-                                    
-                                </div>
-                            </div>
-                            ";
-                            $total_price+=$j['selling_price']*$j['amount'];
-                            $total_weight+=$j['weight']*$j['amount'];
-                        }
-                    }
-                    echo "Total harga ".number_format(($total_price),2,',','.');
-                    echo csrf_field() . "
-                    <input type='hidden' name='seller_id' value='".$n['seller_id']."'>
-                    <input type='hidden' name='total_price' value='$total_price'>
-                    <input type='hidden' name='shipping_price' value='$total_price'>
-                    <input type='text' name='note' value=''>
-                    <input type='submit' value='Bayar'>
-                    <div id='ongkir_". $n['seller'] ."'></div>
-                </div>
-            </div>
-            </form>
-            ";
+    public function payCartList() {
 
-
-            echo "
-            <script>
-                var origin = ".$n['city_id'].";
-                var dst = ".$usr_buyer[0]['city_id'].";
-                //var courier = $('#kurir').val();
-                var weight = ".$total_weight.";
-    
-                $.ajax({
-                    type: 'GET',
-                    url: '". route('checkshipping') ."',
-                    data: {
-                        'dst': dst,
-                        'courier': 'jne',
-                        'origin': origin,
-                        'weight': weight,
-                    },
-                    beforeSend: function () {
-                        $('#ongkir_". $n['seller'] ."').html('loading...');
-                    },
-                    success: function (data) {
-                        $('#ongkir_". $n['seller'] ."').html(data);
-                    },
-                });  
-            </script>
-            ";
-        }
         
     }
 
-    public function payStore(Request $request) {
+    public function storePayment(Request $request) {
 
         $id = Auth::user()->id;
 
-        $this->validate($request, [
-            'seller_id' => ['required'],
-            'total_price' => ['required'],
-            'shipping_price' => ['required'],
-        ]);
+        // $this->validate($request, [
+        //     'seller_id' => ['required'],
+        //     'total_price' => ['required'],
+        //     'shipping_price' => ['required'],
+        // ]);
 
         $purchase_id = Purchase::select('purchase_id')
                             ->where('seller_id', $request['seller_id'])
@@ -169,28 +99,26 @@ class PayController extends Controller
 
     }
 
-    public function payConfirm() {
+    public function detailTransaction() {
         $id = Auth::user()->id;
-
-        $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'cityloc.city_name', 'provinceloc.province_name')
-        ->join('users', 'purchase_item.seller_id', '=', 'users.id')
-        ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id')
-        ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
-        ->where('purchase_item.buyer_id', $id)->distinct()->get();
 
         $invoice = Transaction::select('purchase.purchase_id', 'purchase.total_price', 'purchase.shipping_price', 'purchase.note')
                             ->join('purchase', 'purchase.purchase_id', '=', 'transaction.purchase_id')
                             ->where('transaction.pay', 'N')
                             ->where('purchase.buyer_id', $id)
-                            ->get();
+                            ->first();
 
-        return view('payConfirm', [
-            'invoice' => $invoice,
-        ]);
-        //$purchase_item = \App\Purchase_item::with(['purchase', 'item', 'user'])->get();
+        echo "
+        Invoice no: ". $invoice['purchase_id'] ."<br>
+        Price: Rp". $invoice['total_price'] ."<br>
+        Shipping: Rp". $invoice['shipping_price'] ."<br>
+        Note: ". $invoice['note'] ."<br><br>
 
+        Total Price: Rp". $invoice['total_price'] . $invoice['shipping_price'] ."<br>
+        Trf to: Alvin Bintang R.<br> 
+            538 0004149 BANK MUAMALAT INDONESIA<br>
+        Trf : Rp". $invoice['total_price'] . $invoice['shipping_price'] ."
+        ";
     }
 
 }

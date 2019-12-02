@@ -7,6 +7,15 @@ use GuzzleHttp\Client;
 
 class OngkirController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function getprovince() {
         $client = new Client();
@@ -15,7 +24,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/province',
                 array(
                     'headers' => array(
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                     )
                 )
             );
@@ -41,7 +50,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/city?province='.$request->province_id,
                 array(
                     'headers' => array(
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                     )
                 )
             );
@@ -65,7 +74,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/province',
                 array(
                     'headers' => array(
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                     )
                 )
             );
@@ -89,7 +98,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/city',
                 array(
                     'headers' => array(
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                     )
                 )
             );
@@ -112,7 +121,7 @@ class OngkirController extends Controller
                 [
                     'body' => 'origin='.$request->origin.'&destination='.$request->dst.'&weight='.$request->weight.'&courier='.$request->courier.'',
                     'headers' => [
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                         'content-type' => 'application/x-www-form-urlencoded',
                     ]
                 ]
@@ -125,14 +134,17 @@ class OngkirController extends Controller
 
         $array_result = json_decode($json, true);
 
+        echo "<input id='shipping' list='shipping_list' class='form-control' placeholder='Kurir'>";
+        echo "<datalist id='shipping_list'>";
         echo $array_result['rajaongkir']['results'][0]['name'];
-        echo "<br>";
-        for ($i=0; $i < count($array_result['rajaongkir']['results'][0]['costs']); $i++) { 
-            echo $array_result['rajaongkir']['results'][0]['costs'][$i]['service']; echo " - Rp";
-            echo $array_result['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value']; echo " - Estimasi ";
-            echo $array_result['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd']; echo " hari";
-            echo "<br>";
+        for ($i=0; $i < count($array_result['rajaongkir']['results'][0]['costs']); $i++) {
+            $service = $array_result['rajaongkir']['results'][0]['costs'][$i]['service'];
+            $price = $array_result['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value'];;
+            $etd = $array_result['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd'];
+
+            echo "<option value='$price'>$service . $price . $etd </option>";
         }        
+        echo "</datalist>";
     }
 
 }

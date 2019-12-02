@@ -13,12 +13,19 @@ use App\Purchase_item;
 
 class CartController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function cartCount() {
-
         $id = Auth::user()->id;
         echo $cartCount = Purchase_item::where('purchase_item.buyer_id', $id)->count();
-        
     }
 
     public function cartList() {
@@ -29,7 +36,7 @@ class CartController extends Controller
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
         ->where('purchase_item.buyer_id', $id)->get();
 
-        $cartSeller = Purchase_item::select('users.name AS seller')
+        $cartSeller = Purchase_item::select('users.id', 'users.name AS seller', 'purchase_item.purchase_id')
         ->join('users', 'purchase_item.seller_id', '=', 'users.id')
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
         ->where('purchase_item.buyer_id', $id)->distinct()->get();
@@ -37,47 +44,59 @@ class CartController extends Controller
         foreach($cartSeller as $n) {
             echo "
             <div>
-                <div class='card-body shadow'>
-                    <p class='card-text'>Pelapak: ". $n['seller'] ."</p>
+                <div class='card'>
+                    <div class='card-header'>
+                    <p class='tap bold' onclick='getProfilePelapak(". $n['id'] .")'>
+                    <i class='fa fa-university'></i>
+                    ". $n['seller'] ." #ID_trx:". $n['purchase_id'] ."</p>
+                    </div>
+                    <hr>
                     ";
 
                     $total_price = 0;
                     foreach($cartList as $j) {
                         if($n['seller'] == $j['seller']) {
                             echo "
-                            <div>
-                                <div class='card-body shadow'>
-                                    <button class='fa fa-trash' onclick='deleteItem(". $j['item_id'] .")'></button>
-                                    <p class='card-text'>Nama: ". $j['name'] ."</p>
-                                    <p class='card-text'>Jumlah: ". $j['amount'] ."</p>
-                                    <p class='card-text'>Harga per item:
-                                        Rp". number_format($j['selling_price'],2,',','.') ."
-                                    </p>
-                                    <p class='card-text'>". number_format(($j['selling_price']*$j['amount']),2,',','.') ."</p>
-                                    
+                            <div class='mx-3'>
+                                <div class='row'>
+                                    <div class='col-md-11'>
+                                        <p class='tap' onclick='getItemDetail(". $j['item_id'] .")'>". $j['name'] ."</p>
+                                        <p>". $j['amount'] ."</p>
+                                        <p>
+                                            Rp". number_format($j['selling_price'],2,',','.') ."
+                                        </p>  
+                                    </div>
+                                    <div class='col-md-1'>
+                                        <i class='fa fa-trash lightGrey' onclick='deleteItem(". $j['item_id'] .")'></i>  
+                                    </div>
                                 </div>
                             </div>
+                            <hr>
                             ";
                             $total_price+=$j['selling_price']*$j['amount'];
                         }
                     }
-                    echo "Total harga ".number_format(($total_price),2,',','.');
+                    echo "
+                    <div class='card-footer bold'>
+                    Total harga ".number_format(($total_price),2,',','.')."
+                    <button class='btn btn-sm btn-primary' onclick='getCheckout(". $n['purchase_id'] .")'>Bayar</button>
+                    </div>
+                    ";
                     echo "
                 </div>
             </div>
             ";
-        }
-        
+        }  
     }
 
     public function storeCart(Request $request) {
         $id = Auth::user()->id;
 
-        $this->validate($request, [
-            'seller_id' => ['required'],
-            'item_id' => ['required'],
-            'amount' => ['required'],
-        ]);
+        // $this->validate($request, [
+        //     'seller_id' => ['required'],
+        //     'item_id' => ['required'],
+        //     'amount' => ['required'],
+        // ]);
 
         $purchase_count = Purchase::select('seller_id', 'buyer_id')
                         ->where('seller_id', $request['seller_id'])
@@ -128,7 +147,6 @@ class CartController extends Controller
                                 'amount' => ($purchaseItem_amount[0]['amount']+$request['amount']) 
                             ]);
         }
-
     }
 
     public function deleteCart($item_id) {
@@ -136,7 +154,6 @@ class CartController extends Controller
 
         $usr = Purchase_item::where('item_id', $item_id)->where('buyer_id', $id);
         $usr->delete();
-
     }
 
 }

@@ -4,16 +4,25 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Provinceloc;
-use App\Cityloc;
+use App\Province;
+use App\City;
 use App\Postal;
 
 class AddressController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function getProvince() {
         
-        $province = Provinceloc::all();
+        $province = Province::all();
 
         echo "<option selected'></option>";
         for ($i=0; $i < count($province); $i++) { 
@@ -24,7 +33,7 @@ class AddressController extends Controller
 
     public function getCity(Request $request) {
 
-        $city = Cityloc::select('city_id', 'city_name')
+        $city = City::select('city_id', 'city_name')
         ->where('province_id', $request->province_id)
         ->get();
 
@@ -65,7 +74,7 @@ class AddressController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/province',
                 array(
                     'headers' => array(
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                     )
                 )
             );
@@ -89,7 +98,7 @@ class AddressController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/city',
                 array(
                     'headers' => array(
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                     )
                 )
             );
@@ -112,7 +121,7 @@ class AddressController extends Controller
                 [
                     'body' => 'origin='.$request->origin.'&destination='.$request->dst.'&weight='.$request->weight.'&courier='.$request->courier.'',
                     'headers' => [
-                        'key' => '7e9918182ae85d0888e9b5933b421409',
+                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
                         'content-type' => 'application/x-www-form-urlencoded',
                     ]
                 ]

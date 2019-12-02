@@ -14,14 +14,23 @@ use App\Location;
 
 class ProfileController extends Controller
 {
+    /**
+     * Create a new controller instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
 
     public function index($id) {
 
-        $usr = User::select('users.id', 'users.name', 'users.email', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code',  'location.city_id', 'location.province_id', 'cityloc.city_name', 'provinceloc.province_name')
+        $usr = User::select('users.id', 'users.name', 'users.email', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code',  'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
         ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
         ->join('postal', 'postal.postal_code', '=', 'location.postal_code', 'LEFT OUTER')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id', 'LEFT OUTER')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id', 'LEFT OUTER')
+        ->join('city', 'city.city_id', '=', 'location.city_id', 'LEFT OUTER')
+        ->join('province', 'province.province_id', '=', 'location.province_id', 'LEFT OUTER')
         ->where('users.id', $id)->get();
 
         // echo $usr;
@@ -38,11 +47,11 @@ class ProfileController extends Controller
 
     public function profileUpdate($id) {
 
-        $usr = User::select('users.id', 'users.name', 'users.email', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code',  'location.city_id', 'location.province_id', 'cityloc.city_name', 'provinceloc.province_name')
+        $usr = User::select('users.id', 'users.name', 'users.email', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code',  'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
         ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
         ->join('postal', 'postal.postal_code', '=', 'location.postal_code', 'LEFT OUTER')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id', 'LEFT OUTER')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id', 'LEFT OUTER')
+        ->join('city', 'city.city_id', '=', 'location.city_id', 'LEFT OUTER')
+        ->join('province', 'province.province_id', '=', 'location.province_id', 'LEFT OUTER')
         ->where('users.id', $id)->get();
 
         return view('profileUpdate', [

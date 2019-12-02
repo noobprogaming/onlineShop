@@ -6,9 +6,11 @@ use Illuminate\Http\Request;
 use Request as RequestInput;
 use Illuminate\Support\Facades\Input;
 use Auth;
+use DB;
 
 use App\Item;
 use App\Location;
+use App\Rating;
 
 class DetailItemController extends Controller
 {
@@ -29,11 +31,11 @@ class DetailItemController extends Controller
         
         $usr_buyer = Location::select('city_id')->where('user_id', $id)->get();
 
-        $usr_seller = Item::select('item.id', 'item.item_id', 'item.name', 'item.description', 'item.stock', 'item.selling_price', 'item.weight', 'item.id AS seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'cityloc.city_name', 'provinceloc.province_name')
+        $usr_seller = Item::select('item.id', 'item.item_id', 'item.name', 'item.description', 'item.stock', 'item.selling_price', 'item.weight', 'item.id AS seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
         ->join('users', 'item.id', '=', 'users.id')
         ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('cityloc', 'cityloc.city_id', '=', 'location.city_id')
-        ->join('provinceloc', 'provinceloc.province_id', '=', 'location.province_id')
+        ->join('city', 'city.city_id', '=', 'location.city_id')
+        ->join('province', 'province.province_id', '=', 'location.province_id')
         ->where('item.item_id', $item_id)->get();
 
         $rating = Item::select('rating.rating', 'rating.review', 'rating.time')
@@ -46,10 +48,16 @@ class DetailItemController extends Controller
         //                 ->where('item.item_id', $item_id)
         //                 ->get();
 
+        $ratingLapak = Rating::select(DB::raw('avg(rating.rating) AS ratingLapak'))
+        ->join('item', 'item.item_id', '=', 'rating.item_id')
+        ->where('rating.id', $usr_seller[0]['id'])    
+        ->get();
+
         return view('itemDetail', [
             'usr_buyer' => $usr_buyer,
             'usr_seller' => $usr_seller,
             'rating' => $rating,
+            'ratingLapak' => $ratingLapak,
         ]);
     }
 

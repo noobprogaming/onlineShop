@@ -77,14 +77,14 @@ class CreateOnlineShopTable extends Migration
             $table->engine = 'InnoDB';
         });
 
-        Schema::create('provinceloc', function (Blueprint $table) {
+        Schema::create('province', function (Blueprint $table) {
             $table->integer('province_id');
             $table->string('province_name', 255);
             $table->primary('province_id');
             $table->engine = 'InnoDB';
         });
 
-        Schema::create('cityloc', function (Blueprint $table) {
+        Schema::create('city', function (Blueprint $table) {
             $table->integer('city_id');
             $table->integer('province_id')->unsigned(); //foreignKey
             $table->string('type', 255);
@@ -117,16 +117,16 @@ class CreateOnlineShopTable extends Migration
         DB::statement('ALTER TABLE rating ADD CONSTRAINT fk_ratingUsers_id FOREIGN KEY (id) REFERENCES users(id);');
 
         DB::statement('ALTER TABLE location ADD CONSTRAINT fk_locationUsers_id FOREIGN KEY (user_id) REFERENCES users(id);');
-        DB::statement('ALTER TABLE location ADD CONSTRAINT fk_locationCity_id FOREIGN KEY (city_id) REFERENCES cityloc(city_id);');
-        DB::statement('ALTER TABLE location ADD CONSTRAINT fk_locationProvince_id FOREIGN KEY (province_id) REFERENCES provinceloc(province_id);');
+        DB::statement('ALTER TABLE location ADD CONSTRAINT fk_locationCity_id FOREIGN KEY (city_id) REFERENCES city(city_id);');
+        DB::statement('ALTER TABLE location ADD CONSTRAINT fk_locationProvince_id FOREIGN KEY (province_id) REFERENCES province(province_id);');
         DB::statement('ALTER TABLE location ADD CONSTRAINT fk_locationPostal_code FOREIGN KEY (postal_code) REFERENCES postal(postal_code);');
 
-        DB::statement('ALTER TABLE cityloc ADD CONSTRAINT fk_citiLocProvinceId FOREIGN KEY (province_id) REFERENCES provinceLoc(province_id)');
+        DB::statement('ALTER TABLE city ADD CONSTRAINT fk_citiLocProvinceId FOREIGN KEY (province_id) REFERENCES provinceLoc(province_id)');
 
 
         //SELECT location.address, location.districts, cityLoc.city_name, provinceLoc.province_name FROM location
-        // INNER JOIN cityloc ON cityLoc.city_id = location.city_id
-        // INNER JOIN provinceLoc ON provinceloc.province_id = location.province_id
+        // INNER JOIN city ON cityLoc.city_id = location.city_id
+        // INNER JOIN provinceLoc ON province.province_id = location.province_id
     
     }
 

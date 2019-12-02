@@ -15,7 +15,9 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index');
 Route::get('home', 'HomeController@index')->name('home');
-Route::get('find','HomeController@find')->name('find');
+Route::get('getItem', 'HomeController@getItem')->name('getItem');
+Route::get('getListItem', 'HomeController@getListItem')->name('getListItem');
+Route::get('getItemCategory', 'HomeController@getItemCategory')->name('getItemCategory');
 
 Route::get('profile/{id}', 'ProfileController@index')->name('profile');
 Route::get('profileUpdate/{id}', 'ProfileController@profileUpdate')->name('profileUpdate');
@@ -27,11 +29,10 @@ Route::get('cartList', 'CartController@cartList')->name('cartList');
 Route::post('storeCart','CartController@storeCart')->name('storeCart');
 Route::get('deleteCart/{item_id}','CartController@deleteCart')->name('deleteCart');
 
-Route::get('pay','PayController@pay')->name('pay');
+Route::get('checkout/{purchase_id}','PayController@checkout')->name('checkout');
 Route::get('payCartList', 'PayController@payCartList')->name('payCartList');
-Route::post('payStore', 'PayController@payStore')->name('payStore');
-
-Route::get('payConfirm', 'PayController@payConfirm')->name('payConfirm');
+Route::post('storePayment', 'PayController@storePayment')->name('storePayment');
+Route::get('detailTransaction', 'PayController@detailTransaction')->name('detailTransaction');
 
 Route::get('createItem','ItemController@createItem')->name('createItem');
 Route::get('updateItem/{item_id}','ItemController@updateItem')->name('updateItem');

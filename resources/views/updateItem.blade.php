@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
@@ -167,7 +165,7 @@
                                 class="col-md-4 col-form-label text-md-right">{{ __('Category ID') }}</label>
 
                             <div class="col-md-6">
-                                <select id="category_id" name="category_id">
+                                <select id="category_id" name="category_id" class="form-control">
                                     <option selected value='{{ $usr[0]['category_id'] }}'>{{ $usr[0]['explanation'] }}
                                     </option>
                                     @foreach ($category as $n)
@@ -177,7 +175,7 @@
                             </div>
                         </div>
 
-                        <input type="file" name="file_a">
+                        <input type="file"  name="file_a">
                         <input type="file" name="file_b">
 
                         <div class="form-group row mb-0">
@@ -192,6 +190,5 @@
 
                 </div>
             </div>
-        </div>
-    </div>
+
     @endsection

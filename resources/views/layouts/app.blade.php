@@ -42,7 +42,32 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
+                        @if (Auth::user())
+                        <i class="fa fa-shopping-cart" data-toggle="modal" data-target="#cartModal"
+                        id="btnCartList"></i>
+                        <sup>
+                            <div id="cartCount" class="mt-2"></div>
+                        </sup>
+                        @endif
 
+                        <div class="modal fade" id="cartModal">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Keranjang</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div id="cartList">
+                                            <img src="{{ asset('data_file/load.gif') }}" class="load"/>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-danger"
+                                            data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </ul>
 
                     <!-- Right Side Of Navbar -->
@@ -84,10 +109,76 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="py-4">      
+            <div class="container">
+                    <div class="row justify-content-center">
             @yield('content')
+        </div>
+    </div>
         </main>
     </div>
 </body>
+
+<script>
+/* Cart */
+
+//getCartCount
+$("#cartCount").load("{{ route('cartCount') }}");
+
+//getCartList
+$("#btnCartList").click(function () {
+    $("#cartList").load("{{ route('cartList') }}");
+});
+
+function getCartList() {
+    $("#cartList").load("{{ route('cartList') }}");
+}
+
+
+function addItem(seller_id, item_id) {
+    var amount = document.getElementById('number').value;
+
+    $.ajax({
+        type: "POST",
+        url: "{{ route('storeCart') }}",
+        data: {
+            "_token": "{{ csrf_token() }}",
+            "seller_id": seller_id, 
+            "item_id": item_id,
+            "amount": amount,
+        }
+    }).done(function () {
+        $("#cartCount").load("{{ route('cartCount') }}");
+        $("#cartList").load("{{ route('cartList') }}");
+        $('#cartModal').modal('show');
+        alert("Barang telah ditambahkan!")
+    });
+}
+
+function deleteItem(itemId) {
+    $.ajax({
+        type: "GET",
+        url: "/deleteCart/" + itemId,
+    }).done(function () {
+        alert("Barang telah dihapus!")
+        $("#cartCount").load("{{ route('cartCount') }}");
+        getCartList();
+    });
+}
+/* -- */
+
+function getItemDetail(item_id) {
+    window.location.assign("{{ route('itemDetail', '') }}" + '/' + item_id);
+}
+
+
+function getProfilePelapak(seller_id) {
+    window.location.assign("{{ route('profile', '') }}" + '/' + seller_id);
+}
+
+function getCheckout(purchase_id) {
+    window.location.assign("{{ route('checkout', '') }}" + '/' + purchase_id);
+}
+</script>
 
 </html>

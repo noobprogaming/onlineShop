@@ -14,12 +14,90 @@ class HomeController extends Controller
 {
 
     public function index() {
+        $category = Category::get();
 
-        $sort = RequestInput::input('sort');
+        return view('home', [
+            'category' => $category,
+        ]);
+    } 
+
+    public function getItem(Request $request) {
         
-        switch($sort) {
+        switch($request->sort) {
             case "";
+                $sort = "name";
+                $by = "ASC";
+                break;
+            case "priceLowHigh":
                 $sort = "selling_price";
+                $by = "ASC";
+                break;
+            case "priceHighLow":
+                $sort = "selling_price";
+                $by = "DESC";
+                break;
+        }
+
+        $item = Item::select('item.item_id', 'item.name', 'item.selling_price', 'item.id', 'city.city_name')
+        ->join('users', 'users.id', '=', 'item.id')
+        ->join('location', 'location.user_id', '=', 'users.id')
+        ->join('city', 'city.city_id', '=', 'location.city_id')
+        ->where('item.name', 'LIKE', '%'.$request->nameItem.'%')
+        ->whereNotIn('item.id', [Auth::user()->id])
+        ->orderBy('item.'.$sort, $by)->get();
+
+        foreach($item as $n) {
+            echo "
+                <div class='col-md-3 my-3'>
+                    <div class='card'>
+                        <div class='tap' onclick='getItemDetail(".$n['item_id'].")'>
+                            <img class='card-img-top w-100' src='".asset('data_file/'.$n['item_id'].'_a')."'>
+                            <div class='card-body'>
+                                <h4 class='card-title'>".$n['name']."</h4>
+                                <p class='card-text bold'>Rp".number_format($n['selling_price'])."</p>
+                                <h6>".$n['city_name']."</h6>
+                            </div>
+                        </div>
+                        <div class='card-footer'>
+                            <button class='btn btn-block btn-primary' onclick='addItem(".$n['id'].", ".$n['item_id'].")'>Beli</button>
+                        </div>
+                    </div>
+                </div>
+            ";
+        }
+
+        echo "
+        <input type='hidden' id='number' value='1'>
+        ";
+
+        // echo "
+        //     <div class='pagination'>
+        //         ".$item->links()."
+        //     </div>
+        // ";
+        
+    }
+
+    public function getListItem(Request $request) {
+
+        $item = Item::select('item.name')
+        ->distinct()
+        ->where('item.name', 'LIKE', '%'.$request->nameItem.'%')
+        ->get();
+
+        foreach($item as $n) {
+            echo "
+                <option>".$n['name']."</option>
+            ";
+        }
+
+    }
+
+    public function getItemCategory(Request $request) {
+
+        switch($request->sort) {
+            case "";
+                $sort = "name";
                 $by = "ASC";
                 break;
             case "priceLowHigh":
@@ -34,24 +112,39 @@ class HomeController extends Controller
 
         $category = Category::get();
 
-        $usr = Item::orderBy('item.'.$sort, $by)->paginate(12);
-        return view('home', [
-            'usr' => $usr,
-            'category' => $category,
-        ]);
-    }
+        $item = Item::select('item.item_id', 'item.name', 'item.selling_price', 'item.id', 'city.city_name')
+        ->join('users', 'users.id', '=', 'item.id')
+        ->join('category', 'category.category_id', '=', 'item.category_id')
+        ->join('location', 'location.user_id', '=', 'users.id')
+        ->join('city', 'city.city_id', '=', 'location.city_id')
+        ->where('item.name', 'LIKE', "%$request->explanation%")
+        ->orWhere('category.explanation', 'LIKE', "%$request->explanation%")
+        ->whereNotIn('item.id', [Auth::user()->id])
+        ->orderBy('item.'.$sort, $by)->get();
 
-    public function find(Request $request) {
-        $category = Category::get();
+        foreach($item as $n) {
+            echo "
+                <div class='col-md-3 my-3'>
+                    <div class='card'>
+                        <div class='tap' onclick='getItemDetail(".$n['item_id'].")'>
+                            <img class='card-img-top w-100' src='".asset('data_file/'.$n['item_id'].'_a')."'>
+                            <div class='card-body'>
+                                <h4 class='card-title'>".$n['name']."</h4>
+                                <p class='card-text bold'>Rp".number_format($n['selling_price'])."</p>
+                                <h6>".$n['city_name']."</h6>
+                            </div>
+                        </div>
+                        <div class='card-footer'>
+                            <button class='btn btn-block btn-primary' onclick='addItem(".$n['id'].", ".$n['item_id'].")'>Beli</button>
+                        </div>
+                    </div>
+                </div>
+            ";
+        }
 
-        $usr = Item::when($request->q, function($query) use ($request) {
-            $query->where('name', 'LIKE', "%$request->q%")
-            ->orWhere('category_id', 'LIKE', "%$request->q%");
-        })->paginate();
-        return view('home', [
-            'usr' => $usr,
-            'category' => $category,
-        ]);
+        echo "
+        <input type='hidden' id='number' value='1'>
+        ";
     }
     
 }
