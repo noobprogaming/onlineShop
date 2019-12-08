@@ -13,8 +13,7 @@
                     @endif
 
                     <div class="row">
-
-                        <div>
+                        <div class="col-6">
                             <div class="card-body">Penerima
                                 <h4 class="card-title">{{ $usr_buyer[0]['name'] }}</h4>
                                 <p class="card-text">{{ $usr_buyer[0]['phone_number'] }}</p>
@@ -26,12 +25,9 @@
                                     {{ $usr_buyer[0]['postal_code'] }}
                                 </p>
                             </div>
-                        </div>
-                    </div>
 
                     <button class="btn btn-primary" data-toggle="modal" data-target="#detailTransactionModal"
-                            id="btnCartList">Lihat Detail</button>
-
+                            id="btnCartList">Detail</button>
                         <div class="modal fade" id="detailTransactionModal">
                             <div class="modal-dialog">
                                 <div class="modal-content">
@@ -40,9 +36,24 @@
                                     </div>
                                     <div class="modal-body">
                                         <div id="detailTransaction"></div>
+                                        <div>
+                                            <img class="card-img-top w-100" src="{{ asset('data_file/'.Request::Segment(2).'_trx') }}">
+                                            <form action="{{ route('storeTransaction') }}" method="post" enctype="multipart/form-data">
+                                                {{ csrf_field() }}
+                        
+                                                <input type="hidden" name="purchase_id" value="{{ Request::Segment(2) }}">
+                        
+                                                <input type="file" name="file_transaction">
+                        
+                                                <button type="submit" class="btn btn-primary">
+                                                    Upload
+                                                </button>
+                        
+                                            </form>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <a href="" class="btn btn-primary">Upload bukti pembayaran</a>
+                                        <a href="" class="btn btn-primary"><i class="fa fa-upload"></i> Upload bukti pembayaran</a>
                                         <button type="button" class="btn btn-sm btn-danger"
                                             data-dismiss="modal">Close</button>
                                     </div>
@@ -50,15 +61,20 @@
                             </div>
                         </div>
 
-                    <div class="row">
-                            <div>
+                        </div>
+                    <!-- </div> -->
+
+                    <!-- <div class="row"> -->
+                            <div class="col-6">
                                 <div class="card">
                                     <div class="card-header">
-                                    <p class="tap bold" onclick="getProfilePelapak({{ $cartSeller[0]['id'] }})">
-                                    <i class="fa fa-university"></i>
-                                    {{ $cartSeller[0]['seller'] }}</p>
-                                    <p>{{ $cartSeller[0]['city_name'] }}</p>
-                                    <p>{{ $cartSeller[0]['province_name'] }}</p>
+                                        <p class="tap bold" onclick="getProfilePelapak({{ $cartSeller[0]['id'] }})">
+                                        <i class="fa fa-university"></i>
+                                        {{ $cartSeller[0]['seller'] }}</p>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>City     : {{ $cartSeller[0]['city_name'] }}</p>
+                                        <p>Province : {{ $cartSeller[0]['province_name'] }}</p>
                                     </div>
                                     <hr>
                                     @php
@@ -67,17 +83,18 @@
                                     @endphp
                                     @foreach($cartList as $j)
                                     @if($cartSeller[0]['seller'] == $j['seller'])
-                                        <div class="mx-3">
+                                        <div class="card-text mx-3">
                                             <div class="row">
-                                                <div class="col-md-11">
-                                                    <p class="tap" onclick="getItemDetail({{ $j['item_id'] }})">{{ $j['name'] }}</p>
-                                                    <p>{{ $j['amount'] }}</p>
+                                                <div class="col-md-10">
+                                                    <p class="tap" onclick="getItemDetail({{ $j['item_id'] }})">Item Name : {{ $j['name'] }}</p>
+                                                    <p>Amount : {{ $j['amount'] }}</p>
                                                     <p>
                                                         Rp{{ number_format($j['selling_price'],2,',','.') }}
                                                     </p>  
                                                 </div>
-                                                <div class="col-md-1">
-                                                    <i class="fa fa-trash lightGrey" onclick="deleteItem({{ $j['item_id'] }})"></i>  
+                                                <div class="col-md-2">
+                                                        <i class="fa fa-trash lightGrey" onclick="deleteItem({{ $j['item_id'] }})"></i>
+                                                        delete
                                                 </div>
                                             </div>
                                         </div>
@@ -89,11 +106,11 @@
                                     @endif
                                 @endforeach
                                 
-                                    <div id="ongkir"></div>
+                                    <div id="ongkir">Ongkir::null</div>
                                     <div class="card-footer bold">
-                                    Total harga {{ number_format(($total_price),2,',','.') }}
+                                    Total price {{ number_format(($total_price),2,',','.') }}
 
-                                    <input id="note" type='text' class="form-control" placeholder="Catatan" name='note'>
+                                    <input id="note" type='text' class="form-control" placeholder="Notice" name='note'>
                                     <button class="btn btn-sm btn-primary" onclick="storePayment({{ $cartSeller[0]['seller_id'] }}, {{ $total_price }})">Bayar</button>
                                     </div>
                                 </div>
@@ -104,8 +121,8 @@
 
 
     <script>
-        $("#detailTransaction").load("{{ route('detailTransaction') }}");
-        $('#detailTransactionModal').modal('show');
+        $("#detailTransaction").load("{{ route('detailTransaction', Request::segment(2)) }}");
+        // $("#detailTransactionModal").modal("show");
 
         var origin = "{{ $cartSeller[0]['city_id'] }}";
         var dst = "{{ $usr_buyer[0]['city_id'] }}";
@@ -113,8 +130,8 @@
         var weight = "{{ $total_weight }}";
 
         $.ajax({
-            type: 'GET',
-            url: '{{ route('checkshipping') }}',
+            type: "GET",
+            url: "{{ route('checkshipping') }}",
             data: {
                 'dst': dst,
                 'courier': 'pos',
@@ -122,12 +139,12 @@
                 'weight': weight,
             },
             beforeSend: function () {
-                $('#ongkir').html('loading...');
+                $('#ongkir').html("loading...");
             },
             success: function (data) {
                 $('#ongkir').html(data);
             },
-        });  
+        });
 
         function storePayment(seller_id, total_price) {
             var note = document.getElementById('note').value;
@@ -144,7 +161,7 @@
                     "note": note,
                 }
             }).done(function () {
-                $("#detailTransaction").load("{{ route('detailTransaction') }}");
+                $("#detailTransaction").load("{{ route('detailTransaction', Request::segment(2)) }}");
                 $('#detailTransactionModal').modal('show');
             });
         }

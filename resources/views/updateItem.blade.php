@@ -5,12 +5,12 @@
             <div class="card">
                 <div class="card-header">
                     <div class="row">
-                        <div class="col text-left">Update</div>
+                        <div class="col text-left">Update Item</div>
                         <div class="col text-right">
-                            <div class="tap" data-toggle="modal"
+                            <div class="tap btn btn-danger btn-sm" data-toggle="modal"
                             data-target="#deleteItemModal">
-                                <kbd>Delete</kbd>
                                 <i class="fa fa-trash"></i>
+                                Delete
                             </div>
                         </div>
                     </div>
@@ -60,7 +60,7 @@
 
                         <input type="hidden" name="item_id" value="{{ $usr[0]['item_id'] }}">
 
-                        <div class="form-group row">
+                        <div class="form-group row mt-3">
                             <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Name') }}</label>
 
                             <div class="col-md-6">
@@ -178,9 +178,10 @@
                         <input type="file"  name="file_a">
                         <input type="file" name="file_b">
 
-                        <div class="form-group row mb-0">
+                        <div class="form-group row mb-0 my-3">
                             <div class="col-md-6 offset-md-4">
                                 <button type="submit" class="btn btn-primary">
+                                    <i class="fa fa-pencil"></i>
                                     Update
                                 </button>
                             </div>

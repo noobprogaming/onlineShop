@@ -3,7 +3,7 @@
 @section('content')
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Dashboard</div>
+                <div class="card-header">Sell Item</div>
 
                 <div class="card-body">
                     @if (session('status'))
@@ -132,11 +132,12 @@
 
                         <input type="file"  name="file_a">
                         <input type="file"  name="file_b">
-
                         <div class="form-group row mb-0">
                             <div class="col-md-6 offset-md-4">
+                                <br>
                                 <button type="submit" class="btn btn-primary">
-                                    Tambah
+                                    <i class="fa fa-shopping-bag"></i>
+                                     Insert to MyShop
                                 </button>
                             </div>
                         </div>

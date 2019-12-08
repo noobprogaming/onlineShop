@@ -13,30 +13,38 @@
 
                     <div class="row">
                         <div class="col">
-                            <input type="text" oninput="onInput()" id="nameItem" class="form-control form-control-sm" list="itemList">
-                            <datalist id="itemList">
-                            </datalist>
-                            <button onclick="getFindItem()" class="btn btn-sm btn-primary">Cari</button>
+                          <div class="input-group">
+                            <input type="text" oninput="onInput()" id="nameItem" class="form-control" list="itemList" placeholder="Search item">
+                              <datalist id="itemList">
+                              </datalist>
+                              <div class="input-group-prepend">
+                                <button onclick="getFindItem()" class="input-group-text btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
+                              </div>
+                          </div>
                         </div>
 
-                        @foreach ($category as $n)
                         <div>
-                            <button onclick="getItemCategory('{{ $n['explanation'] }}')">
-                                {{ $n['explanation'] }}
-                            </button>
+                            <select class="form-control">
+                                <option selected>Kategori</option>
+                            @foreach ($category as $n)
+                                <option onclick="getItemCategory('{{ $n['explanation'] }}')">
+                                    {{ $n['explanation'] }}
+                                </option>
+                            @endforeach
+                            </select>
                         </div>
-                        @endforeach
+                        
 
                         <div class="col">
-                            <select onchange="sortBy()" id="sort">
-                                <option>Urutkan berdasarkan</option>
-                                <option value="priceLowHigh">Harga Terendah - Tertinggi</option>
-                                <option value="priceHighLow">Harga Tertinggi - Terendah</option>
+                            <select onchange="sortBy()" id="sort" class="custom-select">
+                                <option selected>Sort by</option>
+                                <option value="priceLowHigh">Price Low to High</option>
+                                <option value="priceHighLow">Price High to Low</option>
                             </select>
                         </div>
 
-                        <div class="col">
-                            <a href="{{ route('createItem') }}">Jual Barang</a>
+                        <div class="col text-right">
+                            <a class="btn btn-success" href="{{ route('createItem') }}"><i class="fa fa-shopping-bag"></i> Sell Item</a>
                         </div>
                     </div>
 

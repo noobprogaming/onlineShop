@@ -30,9 +30,9 @@ Route::post('storeCart','CartController@storeCart')->name('storeCart');
 Route::get('deleteCart/{item_id}','CartController@deleteCart')->name('deleteCart');
 
 Route::get('checkout/{purchase_id}','PayController@checkout')->name('checkout');
-Route::get('payCartList', 'PayController@payCartList')->name('payCartList');
 Route::post('storePayment', 'PayController@storePayment')->name('storePayment');
-Route::get('detailTransaction', 'PayController@detailTransaction')->name('detailTransaction');
+Route::post('storeTransaction', 'PayController@storeTransaction')->name('storeTransaction');
+Route::get('detailTransaction/{purchase_id}', 'PayController@detailTransaction')->name('detailTransaction');
 
 Route::get('createItem','ItemController@createItem')->name('createItem');
 Route::get('updateItem/{item_id}','ItemController@updateItem')->name('updateItem');
