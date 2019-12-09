@@ -40,6 +40,21 @@
                                     </div>
                                     <div class="modal-body">
                                         <div id="detailTransaction"></div>
+                                        <div>
+                                            <img class="card-img-top w-100" src="{{ asset('data_file/'.Request::Segment(2).'_trx') }}">
+                                            <form action="{{ route('storeTransaction') }}" method="post" enctype="multipart/form-data">
+                                                {{ csrf_field() }}
+                        
+                                                <input type="hidden" name="purchase_id" value="{{ Request::Segment(2) }}">
+                        
+                                                <input type="file" name="file_transaction">
+                        
+                                                <button type="submit" class="btn btn-primary">
+                                                    Upload
+                                                </button>
+                        
+                                            </form>
+                                        </div>
                                     </div>
                                     <div class="modal-footer">
                                         <a href="" class="btn btn-primary">Upload bukti pembayaran</a>
@@ -89,7 +104,7 @@
                                     @endif
                                 @endforeach
                                 
-                                    <div id="ongkir"></div>
+                                    <div id="ongkir">Ongkir::null</div>
                                     <div class="card-footer bold">
                                     Total harga {{ number_format(($total_price),2,',','.') }}
 
@@ -104,8 +119,8 @@
 
 
     <script>
-        $("#detailTransaction").load("{{ route('detailTransaction') }}");
-        $('#detailTransactionModal').modal('show');
+        $("#detailTransaction").load("{{ route('detailTransaction', Request::segment(2)) }}");
+        // $("#detailTransactionModal").modal("show");
 
         var origin = "{{ $cartSeller[0]['city_id'] }}";
         var dst = "{{ $usr_buyer[0]['city_id'] }}";
@@ -113,8 +128,8 @@
         var weight = "{{ $total_weight }}";
 
         $.ajax({
-            type: 'GET',
-            url: '{{ route('checkshipping') }}',
+            type: "GET",
+            url: "{{ route('checkshipping') }}",
             data: {
                 'dst': dst,
                 'courier': 'pos',
@@ -122,12 +137,12 @@
                 'weight': weight,
             },
             beforeSend: function () {
-                $('#ongkir').html('loading...');
+                $('#ongkir').html("loading...");
             },
             success: function (data) {
                 $('#ongkir').html(data);
             },
-        });  
+        });
 
         function storePayment(seller_id, total_price) {
             var note = document.getElementById('note').value;
@@ -144,7 +159,7 @@
                     "note": note,
                 }
             }).done(function () {
-                $("#detailTransaction").load("{{ route('detailTransaction') }}");
+                $("#detailTransaction").load("{{ route('detailTransaction', Request::segment(2)) }}");
                 $('#detailTransactionModal').modal('show');
             });
         }

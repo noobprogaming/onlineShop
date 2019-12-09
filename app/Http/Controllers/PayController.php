@@ -64,11 +64,6 @@ class PayController extends Controller
         ]);
     }
 
-    public function payCartList() {
-
-        
-    }
-
     public function storePayment(Request $request) {
 
         $id = Auth::user()->id;
@@ -99,26 +94,51 @@ class PayController extends Controller
 
     }
 
-    public function detailTransaction() {
+    public function storeTransaction(Request $request) {
+
+        $id = Auth::user()->id;
+
+        $this->validate($request, [
+            'file_transaction' => ['required'],
+        ]);
+
+        $file_trx = $request->file('file_transaction');
+        $file_trx->move('data_file', $request['purchase_id']. '_trx');
+                  
+        Transaction::where('purchase_id', $request['purchase_id'])
+                    ->update([
+                        'pay' => 'Y',
+                        'checked' => 'N',
+                    ]);
+        
+        echo Transaction::where('purchase_id', $purchase_id['purchase_id'])->get();
+    }
+
+    public function detailTransaction($purchase_id) {
         $id = Auth::user()->id;
 
         $invoice = Transaction::select('purchase.purchase_id', 'purchase.total_price', 'purchase.shipping_price', 'purchase.note')
                             ->join('purchase', 'purchase.purchase_id', '=', 'transaction.purchase_id')
                             ->where('transaction.pay', 'N')
                             ->where('purchase.buyer_id', $id)
+                            ->where('purchase.purchase_id', $purchase_id)
                             ->first();
 
-        echo "
-        Invoice no: ". $invoice['purchase_id'] ."<br>
-        Price: Rp". $invoice['total_price'] ."<br>
-        Shipping: Rp". $invoice['shipping_price'] ."<br>
-        Note: ". $invoice['note'] ."<br><br>
-
-        Total Price: Rp". $invoice['total_price'] . $invoice['shipping_price'] ."<br>
-        Trf to: Alvin Bintang R.<br> 
-            538 0004149 BANK MUAMALAT INDONESIA<br>
-        Trf : Rp". $invoice['total_price'] . $invoice['shipping_price'] ."
-        ";
+        if ($invoice == 1) {
+            echo "
+            Invoice no: ". $invoice['purchase_id'] ."<br>
+            Price: Rp". $invoice['total_price'] ."<br>
+            Shipping: Rp". $invoice['shipping_price'] ."<br>
+            Note: ". $invoice['note'] ."<br><br>
+    
+            Total Price: Rp". $invoice['total_price'] . $invoice['shipping_price'] ."<br>
+            Trf to: Alvin Bintang R.<br> 
+                538 0004149 BANK MUAMALAT INDONESIA<br>
+            Trf : Rp". $invoice['total_price'] . $invoice['shipping_price'] ."
+            ";
+        } elseif ($invoice == 0) {
+            echo "Transaksi sudah dibayar!";
+        }
     }
 
 }

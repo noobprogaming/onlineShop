@@ -61,7 +61,14 @@ class CartController extends Controller
                                 <div class='row'>
                                     <div class='col-md-11'>
                                         <p class='tap' onclick='getItemDetail(". $j['item_id'] .")'>". $j['name'] ."</p>
-                                        <p>". $j['amount'] ."</p>
+                                        <p>
+                                            <div class='value-button' id='decrease' onclick='decreaseValue()'
+                                            value='Decrease Value'>-</div>
+                                            <input id='number' type='number' class=' @error('amount') is-invalid @enderror'
+                                                name='amount' value='". $j['amount'] ."' required>
+                                            <div class='value-button' id='increase' onclick='increaseValue()'
+                                                value='Increase Value'>+</div>
+                                        </p>
                                         <p>
                                             Rp". number_format($j['selling_price'],2,',','.') ."
                                         </p>  

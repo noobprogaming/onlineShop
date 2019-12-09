@@ -44,7 +44,7 @@
                     <ul class="navbar-nav mr-auto">
                         @if (Auth::user())
                         <i class="fa fa-shopping-cart" data-toggle="modal" data-target="#cartModal"
-                        id="btnCartList"></i>
+                            id="btnCartList"></i>
                         <sup>
                             <div id="cartCount" class="mt-2"></div>
                         </sup>
@@ -58,7 +58,7 @@
                                     </div>
                                     <div class="modal-body">
                                         <div id="cartList">
-                                            <img src="{{ asset('data_file/load.gif') }}" class="load"/>
+                                            <img src="{{ asset('data_file/load.gif') }}" class="load" />
                                         </div>
                                     </div>
                                     <div class="modal-footer">
@@ -90,7 +90,8 @@
                             </a>
 
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="{{ route('profile', Auth::user()->id) }}">{{ __('Profile')}}</a>
+                                <a class="dropdown-item"
+                                    href="{{ route('profile', Auth::user()->id) }}">{{ __('Profile')}}</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
@@ -109,76 +110,105 @@
             </div>
         </nav>
 
-        <main class="py-4">      
+        <main class="py-4">
             <div class="container">
-                    <div class="row justify-content-center">
-            @yield('content')
-        </div>
-    </div>
+                <div class="row justify-content-center">
+                    @yield('content')
+                </div>
+            </div>
         </main>
     </div>
 </body>
 
 <script>
-/* Cart */
+    /* Cart */
 
-//getCartCount
-$("#cartCount").load("{{ route('cartCount') }}");
+    //getCartCount
+    $("#cartCount").load("{{ route('cartCount') }}");
 
-//getCartList
-$("#btnCartList").click(function () {
-    $("#cartList").load("{{ route('cartList') }}");
-});
-
-function getCartList() {
-    $("#cartList").load("{{ route('cartList') }}");
-}
-
-
-function addItem(seller_id, item_id) {
-    var amount = document.getElementById('number').value;
-
-    $.ajax({
-        type: "POST",
-        url: "{{ route('storeCart') }}",
-        data: {
-            "_token": "{{ csrf_token() }}",
-            "seller_id": seller_id, 
-            "item_id": item_id,
-            "amount": amount,
-        }
-    }).done(function () {
-        $("#cartCount").load("{{ route('cartCount') }}");
+    //getCartList
+    $("#btnCartList").click(function () {
         $("#cartList").load("{{ route('cartList') }}");
-        $('#cartModal').modal('show');
-        alert("Barang telah ditambahkan!")
     });
-}
 
-function deleteItem(itemId) {
-    $.ajax({
-        type: "GET",
-        url: "/deleteCart/" + itemId,
-    }).done(function () {
-        alert("Barang telah dihapus!")
-        $("#cartCount").load("{{ route('cartCount') }}");
-        getCartList();
+    function getCartList() {
+        $("#cartList").load("{{ route('cartList') }}");
+    }
+
+
+    function addItem(seller_id, item_id) {
+        var amount = document.getElementById('number').value;
+
+        $.ajax({
+            type: "POST",
+            url: "{{ route('storeCart') }}",
+            data: {
+                "_token": "{{ csrf_token() }}",
+                "seller_id": seller_id,
+                "item_id": item_id,
+                "amount": amount,
+            }
+        }).done(function () {
+            $("#cartCount").load("{{ route('cartCount') }}");
+            $("#cartList").load("{{ route('cartList') }}");
+            $('#cartModal').modal('show');
+            alert("Barang telah ditambahkan!")
+        });
+    }
+
+    function deleteItem(itemId) {
+        $.ajax({
+            type: "GET",
+            url: "/deleteCart/" + itemId,
+        }).done(function () {
+            alert("Barang telah dihapus!")
+            $("#cartCount").load("{{ route('cartCount') }}");
+            getCartList();
+        });
+    }
+    /* -- */
+
+    function getItemDetail(item_id) {
+        window.location.assign("{{ route('itemDetail', '') }}" + '/' + item_id);
+    }
+
+
+    function getProfilePelapak(seller_id) {
+        window.location.assign("{{ route('profile', '') }}" + '/' + seller_id);
+    }
+
+    function getCheckout(purchase_id) {
+        window.location.assign("{{ route('checkout', '') }}" + '/' + purchase_id);
+    }
+
+    /* Amount */
+    function increaseValue() {
+        if (document.getElementById('number').value >= "") {
+            alert('Stok tidak mencukupi');
+        } else {
+            var value = parseInt(document.getElementById('number').value, 10);
+            value = isNaN(value) ? 0 : value;
+            value++;
+            document.getElementById('number').value = value;
+        }
+    }
+
+    function decreaseValue() {
+        var value = parseInt(document.getElementById('number').value, 10);
+        value = isNaN(value) ? 0 : value;
+        value < 1 ? value = 1 : '';
+        value--;
+        document.getElementById('number').value = value;
+    }
+
+    $('#number').on('input', function (e) {
+        if (document.getElementById('number').value > "") {
+            alert('Stok tidak mencukupi');
+            document.getElementById('number').value = "";
+        }
     });
-}
-/* -- */
+    /**/
 
-function getItemDetail(item_id) {
-    window.location.assign("{{ route('itemDetail', '') }}" + '/' + item_id);
-}
-
-
-function getProfilePelapak(seller_id) {
-    window.location.assign("{{ route('profile', '') }}" + '/' + seller_id);
-}
-
-function getCheckout(purchase_id) {
-    window.location.assign("{{ route('checkout', '') }}" + '/' + purchase_id);
-}
 </script>
 
 </html>

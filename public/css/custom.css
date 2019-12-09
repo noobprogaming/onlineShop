@@ -15,15 +15,15 @@
 }
 
 ::-webkit-scrollbar-track {
-    box-shadow: inset 0 0 3px rgb(148, 148, 148);
+    box-shadow: inset 0 0 3px #7F8C8D;
 }
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(201, 201, 201);
+    background: #CBCBCB;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: rgb(148, 148, 148);
+    background: #7F8C8D;
 }
 /* -- */
 
@@ -31,14 +31,15 @@
 /* Amount */
 .value-button {
     display: inline-block;
-    border: 1px solid #ddd;
+    border: 1px solid #CBCBCB;
     margin: 0px;
+    margin-bottom: 3px;
     width: 40px;
-    height: 20px;
+    height: 40px;
     text-align: center;
     vertical-align: middle;
-    padding: 11px 0;
-    background: #eee;
+    padding: 8px 0;
+    background: #F0F0F0;
     -webkit-touch-callout: none;
     -webkit-user-select: none;
     -khtml-user-select: none;
@@ -126,8 +127,12 @@
     color: #7F8C8D;
 }
 
-.lightGrey {
-    color: #95A5A6;
+.lightGrey {    
+    color: #CBCBCB;
+}
+
+.xlightGrey {
+    color: #F0F0F0;
 }
 
 .black {
@@ -162,8 +167,8 @@ form #input-wrap {
 input#number {
     text-align: center;
     border: none;
-    border-top: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #CBCBCB;
+    border-bottom: 1px solid #CBCBCB;
     margin: 0px;
     width: 40px;
     height: 40px;

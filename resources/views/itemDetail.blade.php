@@ -164,45 +164,6 @@
 
 
     <script>
-        /* Amount */
-        function increaseValue() {
-            if (document.getElementById('number').value >= {
-                    {
-                        $usr_seller[0]['stock']
-                    }
-                }) {
-                alert('Stok tidak mencukupi');
-            } else {
-                var value = parseInt(document.getElementById('number').value, 10);
-                value = isNaN(value) ? 0 : value;
-                value++;
-                document.getElementById('number').value = value;
-            }
-        }
-
-        function decreaseValue() {
-            var value = parseInt(document.getElementById('number').value, 10);
-            value = isNaN(value) ? 0 : value;
-            value < 1 ? value = 1 : '';
-            value--;
-            document.getElementById('number').value = value;
-        }
-
-        $('#number').on('input', function (e) {
-            if (document.getElementById('number').value > {
-                    {
-                        $usr_seller[0]['stock']
-                    }
-                }) {
-                alert('Stok tidak mencukupi');
-                document.getElementById('number').value = {
-                    {
-                        $usr_seller[0]['stock']
-                    }
-                };
-            }
-        });
-        /**/
 
         getOngkir();
 

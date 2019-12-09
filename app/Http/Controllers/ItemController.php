@@ -137,7 +137,7 @@ class ItemController extends Controller
         $file_b = $request->file('file_b');
         $file_b->move('data_file', $item_id['item_id']. '_b');
 
-        //redirect error
+        //redirect tapi error
         return redirect()->route('itemDetail', ['item_id' => $item_id['item_id']]);
     }
 }
