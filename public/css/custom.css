@@ -27,6 +27,17 @@
 }
 /* -- */
 
+.jarak {
+    margin-right: 3px;
+}
+
+.h-50 {
+    height: 50%;
+}
+
+.h-250{
+    height: 250px;
+}
 
 /* Amount */
 .value-button {

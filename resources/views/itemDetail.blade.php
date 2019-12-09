@@ -39,7 +39,7 @@
                                 src="{{ asset('data_file/'.$usr_seller[0]['item_id'].'_b') }}">
                             <div class="card-body">
                                 <h4 class="card-title">{{ $usr_seller[0]['name'] }}</h4>
-                                <p class="card-text">Stok:
+                                <p class="card-text">Stock:
                                     @if ($usr_seller[0]['stock'] >= 100)
                                     >100
                                     @elseif ($usr_seller[0]['stock'] >= 50)
@@ -50,7 +50,7 @@
                                     {{ $usr_seller[0]['stock'] }}
                                     @endif
                                 </p>
-                                <p class="card-text">Berat: {{ $usr_seller[0]['weight'] }} gram</p>
+                                <p class="card-text">Weight: {{ $usr_seller[0]['weight'] }} gram</p>
                                 <p class="card-text">
                                     @if (!empty($usr_seller[0]['description']))
                                     {{ $usr_seller[0]['description'] }}
@@ -58,7 +58,7 @@
                                     {{ "No description" }}
                                     @endif
                                 </p>
-                                <p class="card-text">Harga:
+                                <p class="card-text">Price:
                                     Rp{{ number_format($usr_seller[0]['selling_price']),2,',','.' }}
                                 </p>
 
@@ -79,8 +79,7 @@
 
                                 <button type="submit" class="btn btn-primary" onclick="addItem(
                                     {{ $usr_seller[0]['seller_id'].', '. $usr_seller[0]['item_id'] }}
-                                )">Tambahkan ke
-                                    keranjang</button>
+                                )">Add to Cart</button>
 
                                 @endif
 
@@ -91,7 +90,7 @@
 
                         <div>
                             <div class="card-body">
-                                <h4 class="card-title">Penilaian Produk</h4>
+                                <h4 class="card-title">Rating Product</h4>
                                 @foreach ($rating as $n)
 
                                 @if (!empty($n['rating']))
@@ -123,10 +122,10 @@
 
         <div class="col-md-4">
             <div class="card">
-                <div class="card-header">Profil Pelapak</div>
+                <div class="card-header">Profil Shopper</div>
 
                 <div class="card-body tap" onclick="getProfilePelapak({{ $usr_seller[0]['id'] }})">
-                    <img class="card-img-top img-thumbnail rounded-circle w-25"
+                    <img class="card-img-top img-thumbnail rounded-circle w-25 h-25"
                         src="{{ asset('data_file/'.$usr_seller[0]['id'].'_profile') }}">
                     <h4 class="card-title">{{ $usr_seller[0]['seller'] }}</h4>
                     <p class="card-text">
@@ -140,7 +139,7 @@
                     </p>
                     <hr>
                     <p class="card-text">
-                        Rating Lapak <br>
+                        Rating Shop <br>
 
                         @if (!empty($ratingLapak[0]['ratingLapak']))
                         @for ($i = 0; $i < ($ratingLapak[0]['ratingLapak']-1); $i++) <i class="fa fa-star yellow"></i>

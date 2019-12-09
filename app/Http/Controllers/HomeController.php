@@ -51,7 +51,9 @@ class HomeController extends Controller
                 <div class='col-md-3 my-3'>
                     <div class='card'>
                         <div class='tap' onclick='getItemDetail(".$n['item_id'].")'>
-                            <img class='card-img-top w-100' src='".asset('data_file/'.$n['item_id'].'_a')."'>
+                            <div class='h-250'>
+                                <img class='card-img-top h-100' src='".asset('data_file/'.$n['item_id'].'_a')."'>
+                            </div>
                             <div class='card-body'>
                                 <h4 class='card-title'>".$n['name']."</h4>
                                 <p class='card-text bold'>Rp".number_format($n['selling_price'])."</p>

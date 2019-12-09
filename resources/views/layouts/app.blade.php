@@ -29,7 +29,7 @@
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
-            <div class="container">
+            <div class="container-fluid">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
@@ -42,7 +42,7 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-                        @if (Auth::user())
+                    @if (Auth::user())
                         <i class="fa fa-shopping-cart" data-toggle="modal" data-target="#cartModal"
                             id="btnCartList"></i>
                         <sup>
@@ -56,7 +56,7 @@
                                     <div class="modal-header">
                                         <h4 class="modal-title">Keranjang</h4>
                                     </div>
-                                    <div class="modal-body">
+                                    <div class="modal-body my-3">
                                         <div id="cartList">
                                             <img src="{{ asset('data_file/load.gif') }}" class="load" />
                                         </div>
