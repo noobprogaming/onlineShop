@@ -34,6 +34,24 @@
                             </select>
                         </div>
                         
+                        <!-- kategoti edit -->
+                        <div class="col-lg-3">
+                            <div class="left_sidebar_area">
+                                <div class="col-lg-9">
+                                    <div class="product_top_bar">
+                                        <div class="left_dorp">
+                                            <select class="sorting ">
+                                            <option value="1">Default sorting</option>
+                                            <option value="2">Default sorting 01</option>
+                                            <option value="4">Default sorting 02</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
 
                         <div class="col">
                             <select onchange="sortBy()" id="sort" class="custom-select">
@@ -48,23 +66,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-3">
-                        <div class="left_sidebar_area">
-                            <aside class="left_widgets p_filter_widgets">
-                                <div class="l_w_title">
-                                    <h3>Kategori</h3>
-                                </div>
-                                <div class="widgets_inner">
-                                    <ul class="list">
-                                    @foreach ($category as $n)
-                                        <li href="getItemCategory('{{ $n['explanation'] }}')">
-                                            {{ $n['explanation'] }}
-                                        </li>
-                                    @endforeach    
-                                </div>
-                            </aside>
-                        </div>
-                    </div>
+                    
 
                     <div class="row" id="item">
                     </div>

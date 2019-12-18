@@ -48,20 +48,19 @@ class HomeController extends Controller
 
         foreach($item as $n) {
             echo "
-
                 <div class='col-lg-4 col-md-6'>
                     <div class='single-product tap' onclick='getItemDetail(".$n['item_id'].")'>
                         <div class='product-img'>
                         <img class='img-fluid w-100' src='".asset('data_file/'.$n['item_id'].'_a')."' alt='' />
                         <div class='p_icon'>
                             <a href='#'>
-                            <i class='fa fa-user'></i>
+                            <i class='fa fa-eye'></i>
                             </a>
                             <a href='#'>
-                            <i class='ti-heart'></i>
+                            <i class='fa fa-heart'></i>
                             </a>
                             <a href='#'>
-                            <i class='ti-shopping-cart'></i>
+                            <i class='fa fa-shopping-cart'></i>
                             </a>
                         </div>
                         </div>
@@ -79,8 +78,6 @@ class HomeController extends Controller
                     <button class='btn btn-block btn-primary' onclick='addItem(".$n['id'].", ".$n['item_id'].")'>Beli</button>
                         
                 </div>
-                
-
             ";
         }
 
