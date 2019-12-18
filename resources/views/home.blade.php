@@ -48,12 +48,28 @@
                         </div>
                     </div>
 
+                    <div class="col-lg-3">
+                        <div class="left_sidebar_area">
+                            <aside class="left_widgets p_filter_widgets">
+                                <div class="l_w_title">
+                                    <h3>Kategori</h3>
+                                </div>
+                                <div class="widgets_inner">
+                                    <ul class="list">
+                                    @foreach ($category as $n)
+                                        <li href="getItemCategory('{{ $n['explanation'] }}')">
+                                            {{ $n['explanation'] }}
+                                        </li>
+                                    @endforeach    
+                                </div>
+                            </aside>
+                        </div>
+                    </div>
 
                     <div class="row" id="item">
                     </div>
 
-                </div>
-            </div>
+
 
 
     <script>

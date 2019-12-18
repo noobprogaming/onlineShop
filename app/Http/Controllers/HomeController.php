@@ -48,23 +48,39 @@ class HomeController extends Controller
 
         foreach($item as $n) {
             echo "
-                <div class='col-md-3 my-3'>
-                    <div class='card'>
-                        <div class='tap' onclick='getItemDetail(".$n['item_id'].")'>
-                            <div class='h-250'>
-                                <img class='card-img-top h-100' src='".asset('data_file/'.$n['item_id'].'_a')."'>
-                            </div>
-                            <div class='card-body'>
-                                <h4 class='card-title'>".$n['name']."</h4>
-                                <p class='card-text bold'>Rp".number_format($n['selling_price'])."</p>
-                                <h6>".$n['city_name']."</h6>
-                            </div>
+
+                <div class='col-lg-4 col-md-6'>
+                    <div class='single-product tap' onclick='getItemDetail(".$n['item_id'].")'>
+                        <div class='product-img'>
+                        <img class='img-fluid w-100' src='".asset('data_file/'.$n['item_id'].'_a')."' alt='' />
+                        <div class='p_icon'>
+                            <a href='#'>
+                            <i class='fa fa-user'></i>
+                            </a>
+                            <a href='#'>
+                            <i class='ti-heart'></i>
+                            </a>
+                            <a href='#'>
+                            <i class='ti-shopping-cart'></i>
+                            </a>
                         </div>
-                        <div class='card-footer'>
-                            <button class='btn btn-block btn-primary' onclick='addItem(".$n['id'].", ".$n['item_id'].")'>Beli</button>
+                        </div>
+                        <div class='product-btm'>
+                        <a class='d-block'>
+                            <h4>".$n['name']."</h4>
+                        </a>
+                        <div class='mt-3'>
+                            <span class='mr-4'>Rp".number_format($n['selling_price'])."</span>
+                            <del>".$n['city_name']."</del>
+                        </div>
                         </div>
                     </div>
+                    
+                    <button class='btn btn-block btn-primary' onclick='addItem(".$n['id'].", ".$n['item_id'].")'>Beli</button>
+                        
                 </div>
+                
+
             ";
         }
 
