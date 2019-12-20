@@ -24,7 +24,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/province',
                 array(
                     'headers' => array(
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                     )
                 )
             );
@@ -50,7 +50,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/city?province='.$request->province_id,
                 array(
                     'headers' => array(
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                     )
                 )
             );
@@ -74,7 +74,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/province',
                 array(
                     'headers' => array(
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                     )
                 )
             );
@@ -98,7 +98,7 @@ class OngkirController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/city',
                 array(
                     'headers' => array(
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                     )
                 )
             );
@@ -121,7 +121,7 @@ class OngkirController extends Controller
                 [
                     'body' => 'origin='.$request->origin.'&destination='.$request->dst.'&weight='.$request->weight.'&courier='.$request->courier.'',
                     'headers' => [
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                         'content-type' => 'application/x-www-form-urlencoded',
                     ]
                 ]
@@ -134,7 +134,7 @@ class OngkirController extends Controller
 
         $array_result = json_decode($json, true);
 
-        echo "<input id='shipping' list='shipping_list' class='form-control' placeholder='Kurir'>";
+        echo "<input id='shipping' list='shipping_list' class='w-50' placeholder='Kurir'>";
         echo "<datalist id='shipping_list'>";
         echo $array_result['rajaongkir']['results'][0]['name'];
         for ($i=0; $i < count($array_result['rajaongkir']['results'][0]['costs']); $i++) {

@@ -74,7 +74,7 @@ class AddressController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/province',
                 array(
                     'headers' => array(
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                     )
                 )
             );
@@ -98,7 +98,7 @@ class AddressController extends Controller
             $response = $client->get('https://api.rajaongkir.com/starter/city',
                 array(
                     'headers' => array(
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                     )
                 )
             );
@@ -121,7 +121,7 @@ class AddressController extends Controller
                 [
                     'body' => 'origin='.$request->origin.'&destination='.$request->dst.'&weight='.$request->weight.'&courier='.$request->courier.'',
                     'headers' => [
-                        'key' => 'e7be113c0ed4432e97b48362b7f2cbc0',
+                        'key' => '38a6d959858fcb2bceddf42a50fa9d0e',
                         'content-type' => 'application/x-www-form-urlencoded',
                     ]
                 ]

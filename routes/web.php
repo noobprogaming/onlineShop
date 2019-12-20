@@ -32,7 +32,11 @@ Route::get('deleteCart/{item_id}','CartController@deleteCart')->name('deleteCart
 Route::get('checkout/{purchase_id}','PayController@checkout')->name('checkout');
 Route::post('storePayment', 'PayController@storePayment')->name('storePayment');
 Route::post('storeTransaction', 'PayController@storeTransaction')->name('storeTransaction');
+Route::post('updateTransaction', 'PayController@updateTransaction')->name('updateTransaction');
+Route::post('confirmTransaction', 'PayController@confirmTransaction')->name('confirmTransaction');
 Route::get('detailTransaction/{purchase_id}', 'PayController@detailTransaction')->name('detailTransaction');
+
+Route::get('transaction','TransactionController@index')->name('transaction');
 
 Route::get('createItem','ItemController@createItem')->name('createItem');
 Route::get('updateItem/{item_id}','ItemController@updateItem')->name('updateItem');
