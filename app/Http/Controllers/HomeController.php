@@ -49,37 +49,33 @@ class HomeController extends Controller
         foreach($item as $n) {
             echo "
                 <div class='col-lg-4 col-md-6'>
-                    <div class='single-product tap' onclick='getItemDetail(".$n['item_id'].")'>
+                    <div class='single-product'>
                         <div class='product-img'>
                         <img class='img-fluid w-100' src='".asset('data_file/'.$n['item_id'].'_a')."' alt='' />
                         <div class='p_icon'>
-                            <a href='#'>
-                            <i class='fa fa-eye'></i>
-                            </a>
-                            <a href='#'>
+                            <a onclick='addItem(".$n['id'].", ".$n['item_id'].")'>
                             <i class='fa fa-heart'></i>
                             </a>
-                            <a href='#'>
+                            <a onclick='addItem(".$n['id'].", ".$n['item_id'].")'>
                             <i class='fa fa-shopping-cart'></i>
                             </a>
                         </div>
                         </div>
-                        <div class='product-btm'>
+                        <div class='product-btm tap' onclick='getItemDetail(".$n['item_id'].")'>
                         <a class='d-block'>
                             <h4>".$n['name']."</h4>
                         </a>
                         <div class='mt-3'>
                             <span class='mr-4'>Rp".number_format($n['selling_price'])."</span>
-                            <del>".$n['city_name']."</del>
+                            <del>Rp".number_format($n['selling_price']*123/100)."</del>
+                            <p>".$n['city_name']."</p>
                         </div>
                         </div>
                     </div>
-                    
-                    <button class='btn btn-block btn-primary' onclick='addItem(".$n['id'].", ".$n['item_id'].")'>Beli</button>
-                        
                 </div>
             ";
         }
+                    
 
         echo "
         <input type='hidden' id='number' value='1'>

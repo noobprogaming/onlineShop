@@ -1,228 +1,256 @@
 @extends('layouts.app')
 
 @section('content')
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
-                <div class="card-body">
-                    @if (session('status'))
-                    <div class="alert alert-success" role="alert">
-                        {{ session('status') }}
+
+@if (session('status'))
+<div class="alert alert-success" role="alert">
+    {{ session('status') }}
+</div>
+@endif
+
+<section class="cat_product_area section_gap">
+    <div class="container">
+        <div class="row flex-row-reverse">
+            <div class="col-lg-9">
+                <div class="product_top_bar">
+                    <div class="left_dorp col col-md-12">
+                        <select onchange="sortBy()" id="sort" class="sorting">
+                            <option selected>Sort by</option>
+                            <option value="priceLowHigh">Price Low to High</option>
+                            <option value="priceHighLow">Price High to Low</option>
+                        </select>
+                        <select class="show">
+                            <option value="1">Show 12</option>
+                            <option value="2">Show 14</option>
+                            <option value="4">Show 16</option>
+                        </select>
                     </div>
-                    @endif
+                </div>
 
-                    <div class="row">
-                        <div class="col">
-                          <div class="input-group">
-                            <input type="text" oninput="onInput()" id="nameItem" class="form-control" list="itemList" placeholder="Search item">
-                              <datalist id="itemList">
-                              </datalist>
-                              <div class="input-group-prepend">
-                                <button onclick="getFindItem()" class="input-group-text btn btn-sm btn-primary"><i class="fa fa-search"></i></button>
-                              </div>
-                          </div>
-                        </div>
+                <div class="latest_product_inner">
+                    <div class="row" id="item">
+                    </div>
+                </div>
+            </div>
 
-                        <div>
-                            <select class="form-control">
-                                <option selected>Kategori</option>
-                            @foreach ($category as $n)
-                                <option onclick="getItemCategory('{{ $n['explanation'] }}')">
-                                    {{ $n['explanation'] }}
-                                </option>
-                            @endforeach
-                            </select>
+            <div class="col-lg-3">
+                <div class="left_sidebar_area">
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Browse Product</h3>
                         </div>
-                        
-                        <!-- kategoti edit -->
-                        <div class="col-lg-3">
-                            <div class="left_sidebar_area">
-                                <div class="col-lg-9">
-                                    <div class="product_top_bar">
-                                        <div class="left_dorp">
-                                            <select class="sorting ">
-                                            <option value="1">Default sorting</option>
-                                            <option value="2">Default sorting 01</option>
-                                            <option value="4">Default sorting 02</option>
-                                            </select>
-                                        </div>
-                                    </div>
+                        <div class="widgets_inner">
+                            <div class="input-group">
+                                <input type="text" oninput="onInput()" id="nameItem" class="form-control" list="itemList"
+                                    placeholder="Search item">
+                                <datalist id="itemList">
+                                </datalist>
+                                <div class="input-group-prepend">
+                                    <button onclick="getFindItem()" class="input-group-text btn btn-sm btn-primary"><i
+                                            class="fa fa-search"></i></button>
                                 </div>
                             </div>
                         </div>
+                    </aside>
 
-
-
-                        <div class="col">
-                            <select onchange="sortBy()" id="sort" class="custom-select">
-                                <option selected>Sort by</option>
-                                <option value="priceLowHigh">Price Low to High</option>
-                                <option value="priceHighLow">Price High to Low</option>
-                            </select>
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Browse Categories</h3>
                         </div>
-
-                        <div class="col text-right">
-                            <a class="btn btn-success" href="{{ route('createItem') }}"><i class="fa fa-shopping-bag"></i> Sell Item</a>
+                        <div class="widgets_inner">
+                            <ul class="list">
+                                @foreach ($category as $n)
+                                <li onclick="getItemCategory('{{ $n['explanation'] }}')">
+                                    <a>{{ $n['explanation'] }}</a>
+                                </li>
+                                @endforeach
+                            </ul>
                         </div>
-                    </div>
+                    </aside>
 
-                    
+                    <aside class="left_widgets p_filter_widgets">
+                        <div class="l_w_title">
+                            <h3>Price Filter</h3>
+                        </div>
+                        <div class="widgets_inner">
+                            <div class="range_item">
+                                <div id="slider-range"></div>
+                                <div class="">
+                                    <label for="amount">Price : </label>
+                                    <input type="text" id="amount" readonly />
+                                </div>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 
-                    <div class="row" id="item">
-                    </div>
+<div class="row">
+    <div class="col">
+
+    </div>
 
 
+    <div class="col text-right">
+        <a class="btn btn-success" href="{{ route('createItem') }}"><i class="fa fa-shopping-bag"></i> Sell
+            Item</a>
+    </div>
+</div>
 
+<div class="row" id="item">
+</div>
 
-    <script>
+<script>
+    //setup before functions
+    var typingTimer; //timer identifier
+    var doneTypingInterval = 500; //time in ms, 5 second for example
+    var $nameItem = $('#nameItem');
 
-        //setup before functions
-        var typingTimer; //timer identifier
-        var doneTypingInterval = 500; //time in ms, 5 second for example
-        var $nameItem = $('#nameItem');
+    //on keyup, start the countdown
+    $nameItem.on('keyup', function () {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    });
 
-        //on keyup, start the countdown
-        $nameItem.on('keyup', function () {
-            clearTimeout(typingTimer);
-            typingTimer = setTimeout(doneTyping, doneTypingInterval);
+    //on keydown, clear the countdown 
+    $nameItem.on('keydown', function () {
+        clearTimeout(typingTimer);
+    });
+
+    //user is "finished typing," do something
+    function doneTyping() {
+        var nameItem = $('#nameItem').val();
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getListItem') }}",
+            data: {
+                "nameItem": nameItem,
+            },
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#itemList").html(data);
+            },
         });
+    }
 
-        //on keydown, clear the countdown 
-        $nameItem.on('keydown', function () {
-            clearTimeout(typingTimer);
+    getItem();
+
+    function sortBy() {
+        var nameItem = $('#nameItem').val();
+
+        if (document.getElementById('sort').value == "priceLowHigh") {
+            var sort = "priceLowHigh";
+        } else if (document.getElementById('sort').value == "priceHighLow") {
+            var sort = "priceHighLow";
+        }
+
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getItem') }}",
+            data: {
+                "nameItem": nameItem,
+                "sort": sort,
+            },
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#item").html(data);
+            },
         });
+    }
 
-        //user is "finished typing," do something
-        function doneTyping() {
-            var nameItem = $('#nameItem').val();
+    function getItem() {
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getItem') }}",
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#item").html(data);
+            },
+        });
+    }
 
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getListItem') }}",
-                data: {
-                    "nameItem": nameItem,
-                },
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#itemList").html(data);
-                },
-            });
+    function getFindItem() {
+        var nameItem = $('#nameItem').val();
+
+        if (document.getElementById('sort').value == "priceLowHigh") {
+            var sort = "priceLowHigh";
+        } else if (document.getElementById('sort').value == "priceHighLow") {
+            var sort = "priceHighLow";
         }
 
-        getItem();
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getItem') }}",
+            data: {
+                "nameItem": nameItem,
+                "sort": sort,
+            },
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#item").html(data);
+            },
+        });
+    }
 
-        function sortBy() {
-            var nameItem = $('#nameItem').val();
+    function getItemCategory(explanation) {
 
-            if (document.getElementById('sort').value == "priceLowHigh") {
-                var sort = "priceLowHigh";
-            } else if (document.getElementById('sort').value == "priceHighLow") {
-                var sort = "priceHighLow";
-            }
-
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getItem') }}",
-                data: {
-                    "nameItem": nameItem,
-                    "sort": sort,
-                },
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#item").html(data);
-                },
-            });
+        if (document.getElementById('sort').value == "priceLowHigh") {
+            var sort = "priceLowHigh";
+        } else if (document.getElementById('sort').value == "priceHighLow") {
+            var sort = "priceHighLow";
         }
 
-        function getItem() {
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getItem') }}",
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#item").html(data);
-                },
-            });
-        }
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getItemCategory') }}",
+            data: {
+                "explanation": explanation,
+                "sort": sort,
+            },
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#item").html(data);
+            },
+        });
+    }
 
-        function getFindItem() {
-            var nameItem = $('#nameItem').val();
-
-            if (document.getElementById('sort').value == "priceLowHigh") {
-                var sort = "priceLowHigh";
-            } else if (document.getElementById('sort').value == "priceHighLow") {
-                var sort = "priceHighLow";
-            }
-
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getItem') }}",
-                data: {
-                    "nameItem": nameItem,
-                    "sort": sort,
-                },
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#item").html(data);
-                },
-            });
-        }
-
-        function getItemCategory(explanation) {
-            
-            if (document.getElementById('sort').value == "priceLowHigh") {
-                var sort = "priceLowHigh";
-            } else if (document.getElementById('sort').value == "priceHighLow") {
-                var sort = "priceHighLow";
-            }
-
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getItemCategory') }}",
-                data: {
-                    "explanation": explanation,
-                    "sort": sort,
-                },
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#item").html(data);
-                },
-            });
-        }
-
-        function onInput() {
-            var val = document.getElementById("nameItem").value;
-            var opts = document.getElementById('itemList').childNodes;
-            for (var i = 0; i < opts.length; i++) {
-                if (opts[i].value === val) {
-                    // An item was selected from the list!
-                    // yourCallbackHere()
-                    getFindItem();
-                    // alert(opts[i].value);
-                    break;
-                }
+    function onInput() {
+        var val = document.getElementById("nameItem").value;
+        var opts = document.getElementById('itemList').childNodes;
+        for (var i = 0; i < opts.length; i++) {
+            if (opts[i].value === val) {
+                // An item was selected from the list!
+                // yourCallbackHere()
+                getFindItem();
+                // alert(opts[i].value);
+                break;
             }
         }
+    }
 
-    </script>
-    @endsection
+</script>
+@endsection

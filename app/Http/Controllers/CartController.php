@@ -25,7 +25,9 @@ class CartController extends Controller
 
     public function cartCount() {
         $id = Auth::user()->id;
-        echo $cartCount = Purchase_item::where('purchase_item.buyer_id', $id)->count();
+        echo $cartCount = Purchase_item::select('purchase.purchase_id')->where('purchase_item.buyer_id', $id)
+        ->join('purchase', 'purchase.purchase_id', '=', 'purchase_item.purchase_id')
+        ->where('purchase.confirm_id', 1)->count();
     }
 
     public function cartList() {
@@ -33,12 +35,16 @@ class CartController extends Controller
 
         $cartList = Purchase_item::select('users.name AS seller', 'purchase_item.amount', 'purchase_item.selling_price', 'item.item_id', 'item.name')
         ->join('users', 'purchase_item.seller_id', '=', 'users.id')
+        ->join('purchase', 'purchase.purchase_id', '=', 'purchase_item.purchase_id')
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
+        ->where('purchase.confirm_id', 1)
         ->where('purchase_item.buyer_id', $id)->get();
 
         $cartSeller = Purchase_item::select('users.id', 'users.name AS seller', 'purchase_item.purchase_id')
         ->join('users', 'purchase_item.seller_id', '=', 'users.id')
+        ->join('purchase', 'purchase.purchase_id', '=', 'purchase_item.purchase_id')
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
+        ->where('purchase.confirm_id', 1)
         ->where('purchase_item.buyer_id', $id)->distinct()->get();
 
         foreach($cartSeller as $n) {
@@ -108,12 +114,13 @@ class CartController extends Controller
         $purchase_count = Purchase::select('seller_id', 'buyer_id')
                         ->where('seller_id', $request['seller_id'])
                         ->where('buyer_id', $id)
-                        ->whereNull('time')
+                        ->where('confirm_id', 1)
                         ->count();
         
         if($purchase_count == 0) {
             Purchase::create([
                 'seller_id' => $request['seller_id'],
+                'confirm_id' => 1,
                 'buyer_id' => $id,
             ]);
         }
@@ -121,7 +128,7 @@ class CartController extends Controller
         $purchase_id = Purchase::select('purchase_id')
                         ->where('seller_id', $request['seller_id'])
                         ->where('buyer_id', $id)
-                        ->whereNull('time')
+                        ->where('confirm_id', 1)
                         ->orderBy('purchase_id', 'DESC')
                         ->first();
         $purchase_detail = Item::select('purchasing_price', 'selling_price', 'id')
@@ -131,6 +138,7 @@ class CartController extends Controller
         $purchaseItem_count = Purchase_item::select('item_id')
                             ->where('buyer_id', $id)
                             ->where('item_id', $request['item_id'])
+                            ->where('purchase_id', $purchase_id['purchase_id'])
                             ->count();
         $purchaseItem_amount = Purchase_item::select('amount')
                             ->where('buyer_id', $id)

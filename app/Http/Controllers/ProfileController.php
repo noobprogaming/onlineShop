@@ -7,10 +7,12 @@ use Request as RequestInput;
 use Illuminate\Support\Facades\Input;
 use Auth;
 use Hash;
+use DB;
 
 use App\User;
 use App\Item;
 use App\Location;
+use App\Rating;
 
 class ProfileController extends Controller
 {
@@ -33,16 +35,18 @@ class ProfileController extends Controller
         ->join('province', 'province.province_id', '=', 'location.province_id', 'LEFT OUTER')
         ->where('users.id', $id)->get();
 
-        // echo $usr;
+        $ratingLapak = Rating::select(DB::raw('avg(rating.rating) AS ratingLapak'))
+        ->join('item', 'item.item_id', '=', 'rating.item_id')
+        ->where('item.id', $id)    
+        ->get();
 
         $item = Item::where('id', $id)->paginate(12);
+
         return view('profile', [
             'usr' => $usr,
-            'item' => $item
+            'item' => $item,
+            'ratingLapak' => $ratingLapak,
         ]);
-
-        //rating: SELECT DISTINCT AVG(rating.rating) FROM rating INNER JOIN item ON item.id = rating.id WHERE item.id = 2
-
     }
 
     public function profileUpdate($id) {

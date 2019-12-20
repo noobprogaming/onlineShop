@@ -29,39 +29,47 @@ class PayController extends Controller
 
         $id = Auth::user()->id;
 
-        $usr_buyer = User::select('users.name', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code', 'city.city_id', 'city.city_name', 'province.province_name')
-        ->distinct()
-        ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('postal', 'postal.postal_code', '=', 'location.postal_code')
-        ->join('city', 'city.city_id', '=', 'location.city_id')
-        ->join('province', 'province.province_id', '=', 'location.province_id')
-        ->where('users.id', $id)
-        ->get();
+        $status = Purchase::select('confirm_id')->where('purchase_id', $purchase_id)->first();
 
-        if ($usr_buyer->count() == 0) {
-            return redirect()->route('profileUpdate', $id)->with('status', 'Lengkapi profil!'); // return ke profil, tambah alamat
+        if ($status['confirm_id'] !== 1) {
+            $usr_buyer = User::select('users.name', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code', 'city.city_id', 'city.city_name', 'province.province_name')
+            ->distinct()
+            ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
+            ->join('postal', 'postal.postal_code', '=', 'location.postal_code')
+            ->join('city', 'city.city_id', '=', 'location.city_id')
+            ->join('province', 'province.province_id', '=', 'location.province_id')
+            ->where('users.id', $id)
+            ->get();
+    
+            if ($usr_buyer->count() == 0) {
+                return redirect()->route('profileUpdate', $id)->with('status', 'Lengkapi profil!'); // return ke profil, tambah alamat
+            }
+    
+            $cartList = Purchase_item::select('users.name AS seller', 'purchase_item.amount', 'purchase_item.selling_price', 'item.item_id', 'item.name', 'item.weight')
+            ->join('users', 'purchase_item.seller_id', '=', 'users.id')
+            ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
+            ->where('purchase_item.buyer_id', $id)->get();
+    
+            $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
+            ->join('users', 'purchase_item.seller_id', '=', 'users.id')
+            ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
+            ->join('city', 'city.city_id', '=', 'location.city_id')
+            ->join('province', 'province.province_id', '=', 'location.province_id')
+            ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
+            ->where('purchase_item.buyer_id', $id)
+            ->where('purchase_item.purchase_id', $purchase_id)
+            ->distinct()->get();
+    
+            return view('checkout', [
+                'usr_buyer' => $usr_buyer,
+                'cartList' => $cartList,
+                'cartSeller' => $cartSeller,
+            ]);
+        } else {
+            return redirect()->route('home')->with('status', 'Dah bayar');
         }
 
-        $cartList = Purchase_item::select('users.name AS seller', 'purchase_item.amount', 'purchase_item.selling_price', 'item.item_id', 'item.name', 'item.weight')
-        ->join('users', 'purchase_item.seller_id', '=', 'users.id')
-        ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
-        ->where('purchase_item.buyer_id', $id)->get();
 
-        $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
-        ->join('users', 'purchase_item.seller_id', '=', 'users.id')
-        ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('city', 'city.city_id', '=', 'location.city_id')
-        ->join('province', 'province.province_id', '=', 'location.province_id')
-        ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
-        ->where('purchase_item.buyer_id', $id)
-        ->where('purchase_item.purchase_id', $purchase_id)
-        ->distinct()->get();
-
-        return view('checkout', [
-            'usr_buyer' => $usr_buyer,
-            'cartList' => $cartList,
-            'cartSeller' => $cartSeller,
-        ]);
     }
 
     public function storePayment(Request $request) {
@@ -77,20 +85,16 @@ class PayController extends Controller
         $purchase_id = Purchase::select('purchase_id')
                             ->where('seller_id', $request['seller_id'])
                             ->where('buyer_id', $id)
-                            ->whereNull('time')->first();
+                            ->where('confirm_id', 1)->first();
                   
         Purchase::where('purchase_id', $purchase_id['purchase_id'])
                     ->update([
                         'total_price' => $request['total_price'],
                         'shipping_price' => $request['shipping_price'],
                         'note' => $request['note'],
+                        'confirm_id' => 1,
                         'time' => DB::raw('NOW()'),
                     ]);
-        
-        Transaction::create([
-            'purchase_id' => $purchase_id['purchase_id'],
-            'pay' => 'N',
-        ]);
 
     }
 
@@ -105,13 +109,11 @@ class PayController extends Controller
         $file_trx = $request->file('file_transaction');
         $file_trx->move('data_file', $request['purchase_id']. '_trx');
                   
-        Transaction::where('purchase_id', $request['purchase_id'])
+        Purchase::where('purchase_id', $request['purchase_id'])
                     ->update([
-                        'pay' => 'Y',
-                        'checked' => 'N',
+                        'confirm_id' => 2,
                     ]);
         
-        echo Transaction::where('purchase_id', $purchase_id['purchase_id'])->get();
     }
 
     public function detailTransaction($purchase_id) {

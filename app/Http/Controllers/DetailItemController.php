@@ -31,26 +31,22 @@ class DetailItemController extends Controller
         
         $usr_buyer = Location::select('city_id')->where('user_id', $id)->get();
 
-        $usr_seller = Item::select('item.id', 'item.item_id', 'item.name', 'item.description', 'item.stock', 'item.selling_price', 'item.weight', 'item.id AS seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
+        $usr_seller = Item::select('item.id', 'item.item_id', 'item.name', 'item.description', 'item.stock', 'item.selling_price', 'item.weight', 'category.explanation', 'item.id AS seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
         ->join('users', 'item.id', '=', 'users.id')
+        ->join('category', 'category.category_id', '=', 'item.category_id')
         ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
         ->join('city', 'city.city_id', '=', 'location.city_id')
         ->join('province', 'province.province_id', '=', 'location.province_id')
         ->where('item.item_id', $item_id)->get();
 
-        $rating = Item::select('rating.rating', 'rating.review', 'rating.time')
+        $rating = Item::select('users.id', 'users.name', 'rating.rating', 'rating.review', 'rating.time')
         ->join('rating', 'item.item_id', '=', 'rating.item_id', 'LEFT OUTER')
+        ->join('users', 'users.id', '=', 'rating.id')
         ->where('item.item_id', $item_id)->get();
-
-        // $ratingLapak = DB::table('rating')
-        //                 ->select(DB::raw('avg(rating.rating) AS ratingLapak'))
-        //                 ->join('item', 'rating.id', '=', 'item.id')
-        //                 ->where('item.item_id', $item_id)
-        //                 ->get();
 
         $ratingLapak = Rating::select(DB::raw('avg(rating.rating) AS ratingLapak'))
         ->join('item', 'item.item_id', '=', 'rating.item_id')
-        ->where('rating.id', $usr_seller[0]['id'])    
+        ->where('item.id', $usr_seller[0]['id'])    
         ->get();
 
         return view('itemDetail', [

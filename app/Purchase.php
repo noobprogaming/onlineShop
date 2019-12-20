@@ -28,7 +28,7 @@ class Purchase extends Model
     }
 
     protected $fillable = [
-        'purchase_id', 'total_price', 'note', 'seller_id', 'buyer_id', 'time',
+        'purchase_id', 'total_price', 'note', 'seller_id', 'buyer_id', 'confirm_id', 'resi', 'time',
     ];
 
     /**
