@@ -49,17 +49,17 @@ class HomeController extends Controller
         foreach($item as $n) {
             echo "
                 <div class='col-lg-4 col-md-6'>
-                    <div class='single-product'>
+                    <div class='single-product border'>
                         <div class='product-img'>
                         <img class='img-fluid w-100' src='".asset('data_file/'.$n['item_id'].'_a')."' alt='' />
-                        <div class='p_icon'>
-                            <a onclick='addItem(".$n['id'].", ".$n['item_id'].")'>
-                            <i class='fa fa-heart'></i>
-                            </a>
-                            <a onclick='addItem(".$n['id'].", ".$n['item_id'].")'>
-                            <i class='fa fa-shopping-cart'></i>
-                            </a>
-                        </div>
+                            <div class='p_icon'>
+                                <a onclick='addItem(".$n['id'].", ".$n['item_id'].")'>
+                                <i class='fa fa-heart'></i>
+                                </a>
+                                <a onclick='addItem(".$n['id'].", ".$n['item_id'].")'>
+                                <i class='fa fa-shopping-cart'></i>
+                                </a>
+                            </div>
                         </div>
                         <div class='product-btm tap' onclick='getItemDetail(".$n['item_id'].")'>
                         <a class='d-block'>

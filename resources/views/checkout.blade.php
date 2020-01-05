@@ -34,9 +34,9 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th scope="col">Product</th>
-                            <th scope="col">Price</th>
-                            <th scope="col">Quantity</th>
+                            <th scope="col">Produk</th>
+                            <th scope="col">Harga</th>
+                            <th scope="col">Qty</th>
                             <th scope="col" class="text-right">Total</th>
                         </tr>
                     </thead>
@@ -122,7 +122,7 @@
                                 </div>
                             </td>
                             <td>
-                                <h5 style="margin-top: 12px">Shipping</h5>
+                                <h5 style="margin-top: 12px">Ekspedisi</h5>
                             </td>
                             <td style="vertical-align: top">
                                 <div class="shipping_box">
@@ -145,10 +145,9 @@
                             <td>
                                 <div class="checkout_btn_inner">
                                     @if ($status['confirm_id'] == 1)
-                                    <a class="gray_btn" href="{{ route('home') }}">Continue Shopping</a>
+                                    <a class="gray_btn" href="{{ route('home') }}">Belanja lagi</a>
                                     <button class="main_btn"
-                                        onclick="storePayment({{ $cartSeller[0]['seller_id'] }}, {{ $total_price }})">Proceed
-                                        to checkout</button>
+                                        onclick="storePayment({{ $cartSeller[0]['seller_id'] }}, {{ $total_price }})">Checkout</button>
 
                                     <div class="modal fade" id="detailTransactionModal">
                                         <div class="modal-dialog">

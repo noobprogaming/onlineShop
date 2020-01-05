@@ -165,7 +165,7 @@ class PayController extends Controller
             Note: ". $invoice['note'] ."<br><br>
     
             Total Price: Rp". $invoice['total_price'] . $invoice['shipping_price'] ."<br>
-            Trf to: Alvin Bintang R.<br> 
+            Trf to: EISER<br> 
                 538 0004149 BANK MUAMALAT INDONESIA<br>
             Trf : Rp". $invoice['total_price'] . $invoice['shipping_price'] ."
             ";

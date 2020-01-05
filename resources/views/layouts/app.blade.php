@@ -84,41 +84,11 @@
                                 <div class="col-lg-7 pr-0">
                                     <ul class="nav navbar-nav center_nav pull-right">
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ url('/') }}">Home</a>
+                                            <a class="nav-link" href="{{ url('/') }}">Beranda</a>
                                         </li>
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ route('transaction') }}">Transaksi</a>
                                         </li>
-
-                                        @guest
-
-                                        @else
-                                        <li class="nav-item submenu dropdown">
-                                            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"
-                                                role="button" aria-haspopup="true" aria-expanded="false">
-                                                {{ Auth::user()->name }} <span class="caret"></span>
-                                            </a>
-                                            <ul class="dropdown-menu">
-                                                <li class="nav-item">
-                                                    <a class="nav-link"
-                                                        href="{{ route('profile', Auth::user()->id) }}">{{ __('Profile')}}</a>
-                                                </li>
-                                                <li class="nav-item">
-                                                    <a class="nav-link" href="{{ route('logout') }}"
-                                                        onclick="event.preventDefault();
-                                                                                document.getElementById('logout-form').submit();">
-                                                        {{ __('Logout') }}
-                                                    </a>
-
-                                                    <form id="logout-form" action="{{ route('logout') }}" method="POST"
-                                                        style="display: none;">
-                                                        @csrf
-                                                    </form>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        @endguest
-
                                     </ul>
                                 </div>
 
@@ -126,22 +96,13 @@
                                     <ul class="nav navbar-nav navbar-right right_nav pull-right">
                                         @guest
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                            <a class="nav-link" href="{{ route('login') }}">SIGN IN</a>
                                         </li>
-                                        @if (Route::has('register'))
-                                        <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
-                                        </li>
-                                        @endif
                                         @else
-                                        <li class="nav-item">
-                                            <a href="#" class="icons">
-                                                <i class="ti-search" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
 
                                         <li class="nav-item">
-                                            <a class="icons" data-toggle="modal" data-target="#cartModal" id="btnCartList">
+                                            <a class="icons" data-toggle="modal" data-target="#cartModal"
+                                                id="btnCartList">
                                                 <i class="ti-shopping-cart"></i>
                                                 <sup>
                                                     <div id="cartCount" class="mt-2 d-inline"></div>
@@ -149,17 +110,34 @@
                                             </a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a href="#" class="icons">
-                                                <i class="ti-user" aria-hidden="true"></i>
+                                        <li class="nav-item submenu dropdown">
+                                            <a class="icons">
+                                                    <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button"
+                                                        aria-haspopup="true" aria-expanded="false">
+                                                        <i class="ti-user mr-2" aria-hidden="true"></i>
+                                                        {{ Auth::user()->name }} <span class="caret"></span>
+                                                    </a>
+                                                <ul class="dropdown-menu">
+                                                    <li class="nav-item">
+                                                        <a class="nav-link"
+                                                            href="{{ route('profile', Auth::user()->id) }}">{{ __('Profile')}}</a>
+                                                    </li>
+                                                    <li class="nav-item">
+                                                        <a class="nav-link" href="{{ route('logout') }}"
+                                                            onclick="event.preventDefault();
+                                                                                            document.getElementById('logout-form').submit();">
+                                                            {{ __('Logout') }}
+                                                        </a>
+
+                                                        <form id="logout-form" action="{{ route('logout') }}" method="POST"
+                                                            style="display: none;">
+                                                            @csrf
+                                                        </form>
+                                                    </li>
+                                                </ul>
                                             </a>
                                         </li>
 
-                                        <li class="nav-item">
-                                            <a href="#" class="icons">
-                                                <i class="ti-heart" aria-hidden="true"></i>
-                                            </a>
-                                        </li>
                                         @endguest
                                     </ul>
                                 </div>
@@ -202,63 +180,6 @@
 
 <footer class="footer-area section_gap">
     <div class="container">
-        <div class="row">
-            <div class="col-lg-2 col-md-6 single-footer-widget">
-                <h4>Top Products</h4>
-                <ul>
-                    <li><a href="#">Managed Website</a></li>
-                    <li><a href="#">Manage Reputation</a></li>
-                    <li><a href="#">Power Tools</a></li>
-                    <li><a href="#">Marketing Service</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 single-footer-widget">
-                <h4>Quick Links</h4>
-                <ul>
-                    <li><a href="#">Jobs</a></li>
-                    <li><a href="#">Brand Assets</a></li>
-                    <li><a href="#">Investor Relations</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 single-footer-widget">
-                <h4>Features</h4>
-                <ul>
-                    <li><a href="#">Jobs</a></li>
-                    <li><a href="#">Brand Assets</a></li>
-                    <li><a href="#">Investor Relations</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-2 col-md-6 single-footer-widget">
-                <h4>Resources</h4>
-                <ul>
-                    <li><a href="#">Guides</a></li>
-                    <li><a href="#">Research</a></li>
-                    <li><a href="#">Experts</a></li>
-                    <li><a href="#">Agencies</a></li>
-                </ul>
-            </div>
-            <div class="col-lg-4 col-md-6 single-footer-widget">
-                <h4>Newsletter</h4>
-                <p>You can trust us. we only send promo offers,</p>
-                <div class="form-wrap" id="mc_embed_signup">
-                    <form target="_blank"
-                        action="https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01"
-                        method="get" class="form-inline">
-                        <input class="form-control" name="EMAIL" placeholder="Your Email Address"
-                            onfocus="this.placeholder = ''" onblur="this.placeholder = 'Your Email Address '"
-                            required="" type="email">
-                        <button class="click-btn btn btn-default">Subscribe</button>
-                        <div style="position: absolute; left: -5000px;">
-                            <input name="b_36c4fd991d266f23781ded980_aefe40901a" tabindex="-1" value="" type="text">
-                        </div>
-
-                        <div class="info"></div>
-                    </form>
-                </div>
-            </div>
-        </div>
         <div class="footer-bottom row align-items-center">
             <p class="footer-text m-0 col-lg-8 col-md-12">
                 <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->

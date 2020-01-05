@@ -73,9 +73,22 @@
     font-weight: bold;
 }
 
+.btn-login {
+    color: #F8F9F9;
+    background-color: #71CD14;
+}
+
+.btn-login:hover {
+    background-color: #71C114;
+}
+
 /* - Color - */
 .red {
     color: #C0392B;
+}
+
+.green {
+    color: #71CD14;
 }
 
 .lightRed {
@@ -92,10 +105,6 @@
 
 .lightBlue {
     color: #3498DB;
-}
-
-.green {
-    color: #27AE60;
 }
 
 .lightGreen {
@@ -195,6 +204,20 @@ input[type=number]::-webkit-outer-spin-button {
     width: 50px;
     height: 50px;
     background-color: #CBCBCB;
+}
+
+.img-thumb {
+    width: 60px;
+    height: 60px;
+    border: 1px solid #F8F9F9;
+}
+
+.border {
+    border: 1px solid #F8F9F9;
+}
+
+.product-btm {
+    background-color: #F8F9F9;
 }
 
 /* -- */

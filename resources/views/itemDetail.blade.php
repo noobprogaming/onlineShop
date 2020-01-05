@@ -16,10 +16,10 @@
                     <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
                         <ol class="carousel-indicators">
                             <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active">
-                                <img src="{{ asset('img/product/single-product/s-product-s-2.jpg') }}" alt="" />
+                                <img src="{{ asset('data_file/'.$usr_seller[0]['item_id'].'_a') }}" class="img-thumb" />
                             </li>
                             <li data-target="#carouselExampleIndicators" data-slide-to="1">
-                                <img src="{{ asset('img/product/single-product/s-product-s-3.jpg') }}" alt="" />
+                                <img src="{{ asset('data_file/'.$usr_seller[0]['item_id'].'_b') }}" class="img-thumb" />
                             </li>
                         </ol>
                         <div class="carousel-inner">
@@ -89,7 +89,7 @@
                             <div class="value-button" id="decrease">-</div>
                             <input id="number" value="1">
                             <div class="value-button" id="increase">+</div>
-                            <button class="btn btn-primary" disabled>Tambahkan ke cart</button>
+                            {{-- <button class="btn btn-primary" disabled>Tambahkan ke cart</button> --}}
 
                             @else
                             <div class="value-button" id="decrease" style="border-radius: 5px 0 0 5px"
@@ -104,13 +104,7 @@
 
                         <button class="main_btn" onclick="addItem(
                             {{ $usr_seller[0]['seller_id'].', '. $usr_seller[0]['item_id'] }}
-                        )">Add to Cart</button>
-                        <a class="icon_btn" href="#">
-                            <i class="lnr lnr lnr-diamond"></i>
-                        </a>
-                        <a class="icon_btn" href="#">
-                            <i class="lnr lnr lnr-heart"></i>
-                        </a>
+                        )">Tambahkan ke keranjang</button>
                     </div>
                 </div>
             </div>
@@ -508,104 +502,6 @@
             </div>
         </div>
 </section>
-
-<div class="col-md-8">
-    <div class="card">
-        <div class="card-header">
-            <div class="row">
-                <div class="col text-left">Detail</div>
-                <div class="col text-right">
-                    @if ($usr_seller[0]['id'] == Auth::user()->id || empty(Auth::user()->id))
-                    <div class="tap" onclick="getUpdateItem()">
-                        <kbd>Update</kbd>
-                        <i class="fa fa-edit"></i>
-                    </div>
-                    <script>
-                        function getUpdateItem() {
-                            window.location.assign("{{ route('updateItem', [$usr_seller[0]['item_id']]) }}");
-                        }
-
-                    </script>
-                    @endif
-                </div>
-            </div>
-        </div>
-
-        <div class="card-body">
-            @if (session('status'))
-            <div class="alert alert-success" role="alert">
-                {{ session('status') }}
-            </div>
-            @endif
-
-            <div class="row">
-
-                <div>
-
-                    <div class="card-body">
-
-                        <div id="ongkir"></div>
-
-                    </div>
-                </div>
-
-                <div>
-                    <div class="card-body">
-                        <h4 class="card-title">Rating Product</h4>
-
-
-                    </div>
-                </div>
-
-            </div>
-        </div>
-
-
-
-    </div>
-</div>
-
-<div class="col-md-4">
-    <div class="card">
-        <div class="card-header">Profil Pelapak</div>
-
-        <div class="card-body tap" onclick="getProfilePelapak({{ $usr_seller[0]['id'] }})">
-            <img class="card-img-top img-thumbnail rounded-circle w-25 h-25"
-                src="{{ asset('data_file/'.$usr_seller[0]['id'].'_profile') }}">
-            <h4 class="card-title">{{ $usr_seller[0]['seller'] }}</h4>
-            <p class="card-text">
-                <div id="city">
-                    {{ $usr_seller[0]['city_name'] }}
-                </div>
-
-                <div id="province">
-                    {{ $usr_seller[0]['province_name'] }}
-                </div>
-            </p>
-            <hr>
-            <p class="card-text">
-                Rating Shop <br>
-
-                @if (!empty($ratingLapak[0]['ratingLapak']))
-                @for ($i = 0; $i < ($ratingLapak[0]['ratingLapak']-1); $i++) <i class="fa fa-star yellow"></i>
-                    @endfor
-                    @if(substr(($ratingLapak[0]['ratingLapak']-0.001), 2) >= 0.5)
-                    <i class="fa fa-star yellow"></i>
-                    @else
-                    <i class="fa fa-star-half yellow"></i>
-                    @endif
-
-                    {{ $ratingLapak[0]['ratingLapak'] }}
-                    @else
-                    Belum ada penilaian
-                    @endif
-
-
-            </p>
-        </div>
-
-    </div>
-</div>
 
 <script>
     getOngkir();

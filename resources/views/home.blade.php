@@ -15,14 +15,9 @@
                 <div class="product_top_bar">
                     <div class="left_dorp col col-md-12">
                         <select onchange="sortBy()" id="sort" class="sorting">
-                            <option selected>Sort by</option>
-                            <option value="priceLowHigh">Price Low to High</option>
-                            <option value="priceHighLow">Price High to Low</option>
-                        </select>
-                        <select class="show">
-                            <option value="1">Show 12</option>
-                            <option value="2">Show 14</option>
-                            <option value="4">Show 16</option>
+                            <option selected>Urutkan</option>
+                            <option value="priceLowHigh">Termurah - termahal</option>
+                            <option value="priceHighLow">Termahal - termurah</option>
                         </select>
                     </div>
                 </div>
@@ -37,12 +32,12 @@
                 <div class="left_sidebar_area">
                     <aside class="left_widgets p_filter_widgets">
                         <div class="l_w_title">
-                            <h3>Browse Product</h3>
+                            <h3>Cari produk</h3>
                         </div>
                         <div class="widgets_inner">
                             <div class="input-group">
                                 <input type="text" oninput="onInput()" id="nameItem" class="form-control" list="itemList"
-                                    placeholder="Search item">
+                                    placeholder="Cari...">
                                 <datalist id="itemList">
                                 </datalist>
                                 <div class="input-group-prepend">
@@ -55,50 +50,24 @@
 
                     <aside class="left_widgets p_filter_widgets">
                         <div class="l_w_title">
-                            <h3>Browse Categories</h3>
+                            <h3>Kategori</h3>
                         </div>
                         <div class="widgets_inner">
                             <ul class="list">
                                 @foreach ($category as $n)
                                 <li onclick="getItemCategory('{{ $n['explanation'] }}')">
-                                    <a>{{ $n['explanation'] }}</a>
+                                    <a>{{ ucfirst($n['explanation']) }}</a>
                                 </li>
                                 @endforeach
                             </ul>
                         </div>
                     </aside>
 
-                    <aside class="left_widgets p_filter_widgets">
-                        <div class="l_w_title">
-                            <h3>Price Filter</h3>
-                        </div>
-                        <div class="widgets_inner">
-                            <div class="range_item">
-                                <div id="slider-range"></div>
-                                <div class="">
-                                    <label for="amount">Price : </label>
-                                    <input type="text" id="amount" readonly />
-                                </div>
-                            </div>
-                        </div>
-                    </aside>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
-<div class="row">
-    <div class="col">
-
-    </div>
-
-
-    <div class="col text-right">
-        <a class="btn btn-success" href="{{ route('createItem') }}"><i class="fa fa-shopping-bag"></i> Sell
-            Item</a>
-    </div>
-</div>
 
 <div class="row" id="item">
 </div>
