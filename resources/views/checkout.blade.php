@@ -157,7 +157,7 @@
                                                 <div class="modal-header">
                                                     <h4 class="modal-title">Pembayaran</h4>
                                                 </div>
-                                                <div class="modal-body">
+                                                <div class="modal-body text-left">
                                                     <div id="detailTransaction"></div>
                                                     <div>
                                                         {{-- <img class="card-img-top w-100"

@@ -33,7 +33,7 @@
                                         <img class="card-img-top h-100"
                                             src="{{ asset('data_file/'.$n['item_id'].'_a') }}">
                                     </div>
-                                    <div class="card-body">
+                                    <div class="card-body" style="min-height: 150px; max-height: 150px; background-color: #F0F0F0">
                                         <h4 class="card-title">{{ $n['name'] }}</h4>
                                         <p class="card-text">Rp{{ number_format($n['selling_price']), 2 }}</p>
                                     </div>
@@ -98,6 +98,9 @@
 
                                 </p>
                             </li>
+
+                            @if($usr[0]['id']==Auth::user()->id)
+                            
                             <li>
                                 <a class="d-flex">
                                     {{ $usr[0]['address'] }}
@@ -108,11 +111,12 @@
                                 </a>
                             </li>
                             <div>
-                                <a class="btn btn-success" href="{{ route('createItem') }}"><i class="fa fa-shopping-bag"></i> Sell
-                                    Item</a>
+                                <a class="btn btn-success" href="{{ route('createItem') }}"><i class="fa fa-shopping-bag"></i>Jual Barang</a>
                                 <a class="btn btn-primary" href="{{ route('profileUpdate', ['id'=>$usr[0]['id']]) }}"><i
-                                        class="fa fa-pencil"></i> Update Profil</a>
+                                        class="fa fa-pencil"></i>Ubah Profil</a>
                             </div>
+                            
+                            @endif
                         </ul>
                     </aside>
                 </div>

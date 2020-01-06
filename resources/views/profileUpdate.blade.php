@@ -1,11 +1,16 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container my-5">
+    <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card">
-                <div class="card-header">Dashboard</div>
+            <div class="card shadow">
+                <div class="card-body py-5">
 
-                <div class="card-body">
+                    <div class="text-center mb-5">
+                        <h4>Ubah Profil</h4>
+                    </div>
+
                     @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -42,9 +47,9 @@
 
                                 <div class="form-group row">
                                     <label for="photo_profile"
-                                        class="col-md-4 col-form-label text-md-right">{{ __('photo_profile') }}</label>
+                                        class="col-md-4 col-form-label text-md-right">{{ __('Foto Profil') }}</label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
 
                                         <input id="photo_profile" @error('photo_profile') is-invalid @enderror type="file"
                                             name="photo_profile">
@@ -58,9 +63,9 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('name') }}</label>
+                                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <input id="name" type="text"
                                             class="form-control @error('name') is-invalid @enderror" name="name"
                                             value="{{ $usr[0]['name'] }}" required autocomplete="name" >
@@ -75,9 +80,9 @@
 
                                 <div class="form-group row">
                                     <label for="email"
-                                        class="col-md-4 col-form-label text-md-right">{{ __('email') }}</label>
+                                        class="col-md-4 col-form-label text-md-right">{{ __('Email') }}</label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <input id="email" type="email"
                                             class="form-control @error('name') is-invalid @enderror" name="email"
                                             value="{{ $usr[0]['email'] }}" required autocomplete="email" >
@@ -92,9 +97,9 @@
 
                                 <div class="form-group row">
                                     <label for="phone_number"
-                                        class="col-md-4 col-form-label text-md-right">{{ __('phone_number') }}</label>
+                                        class="col-md-4 col-form-label text-md-right">{{ __('Nomor. HP') }}</label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <input id="phone_number" type="text"
                                             class="form-control @error('name') is-invalid @enderror" name="phone_number"
                                             value="{{ $usr[0]['phone_number'] }}" required autocomplete="phone_number"
@@ -110,9 +115,9 @@
 
                                 <div class="form-group row">
                                     <label for="password"
-                                        class="col-md-4 col-form-label text-md-right">{{ __('Password') }}</label>
+                                        class="col-md-4 col-form-label text-md-right">{{ __('Kata Sandi') }}</label>
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-8">
                                         <input id="password" type="password"
                                             class="form-control @error('password') is-invalid @enderror" name="password" >
 
@@ -125,17 +130,17 @@
                                 </div>
                             <div class="form-group row">
                                 <label for="password-confirm"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Confirm Password') }}</label>
+                                    class="col-md-4 col-form-label text-md-right">{{ __('Konfirmasi Kata Sandi') }}</label>
 
-                                <div class="col-md-6">
+                                <div class="col-md-8">
                                     <input id="password-confirm" type="password" class="form-control">
                                 </div>
                             </div>
 
                             <div class="form-group row mb-0">
-                                <div class="col-md-6 offset-md-4">
-                                    <button id="btnUpdateProfile" type="submit" class="btn btn-primary">
-                                        {{ __('Update') }}
+                                <div class="col-md-8 offset-md-4">
+                                    <button id="btnUpdateProfile" type="submit" class="btn btn-login w-100">
+                                        {{ __('Ubah') }}
                                     </button>
                                 </div>
                             </div>
@@ -149,7 +154,7 @@
                                 <div>
                                     <div class="form-group row">
                                         <label for="province_id"
-                                            class="col-md-4 col-form-label text-md-right">{{ __('province_id') }}</label>
+                                            class="col-md-4 col-form-label text-md-right">{{ __('Provinsi') }}</label>
 
                                         <div class="col-md-8">
 
@@ -168,7 +173,7 @@
 
                                     <div class="form-group row">
                                         <label for="city_id"
-                                            class="col-md-4 col-form-label text-md-right">{{ __('city_id') }}</label>
+                                            class="col-md-4 col-form-label text-md-right">{{ __('Kota') }}</label>
 
                                         <div class="col-md-8">
                                             <select id="city" name="city_id"
@@ -185,7 +190,7 @@
 
                                     <div class="form-group row">
                                         <label for="postal_code"
-                                            class="col-md-4 col-form-label text-md-right">{{ __('postal_code') }}</label>
+                                            class="col-md-4 col-form-label text-md-right">{{ __('Kode Pos') }}</label>
 
                                         <div class="col-md-8">
                                             <select id="postal" name="postal_code"
@@ -202,7 +207,7 @@
 
                                     <div class="form-group row">
                                         <label for="urban"
-                                            class="col-md-4 col-form-label text-md-right">{{ __('urban') }}</label>
+                                            class="col-md-4 col-form-label text-md-right">{{ __('Kelurahan') }}</label>
 
                                         <div class="col-md-8">
                                             <select id="urban" name="urban"
@@ -219,7 +224,7 @@
 
                                     <div class="form-group row">
                                         <label for="address"
-                                            class="col-md-4 col-form-label text-md-right">{{ __('address') }}</label>
+                                            class="col-md-4 col-form-label text-md-right">{{ __('Alamat') }}</label>
 
                                         <div class="col-md-8">
                                             <input id="address" type="text"

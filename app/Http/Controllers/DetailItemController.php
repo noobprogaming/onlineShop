@@ -44,6 +44,13 @@ class DetailItemController extends Controller
         ->join('users', 'users.id', '=', 'rating.id')
         ->where('item.item_id', $item_id)->get();
 
+        $rating_avg = Item::selectRaw('AVG(rating.rating)')
+        ->join('rating', 'item.item_id', '=', 'rating.item_id', 'LEFT OUTER')
+        ->join('users', 'users.id', '=', 'rating.id')
+        ->where('item.item_id', $item_id)->get();
+
+        $rating_count = $rating->count();
+
         $ratingLapak = Rating::select(DB::raw('avg(rating.rating) AS ratingLapak'))
         ->join('item', 'item.item_id', '=', 'rating.item_id')
         ->where('item.id', $usr_seller[0]['id'])    
@@ -53,6 +60,8 @@ class DetailItemController extends Controller
             'usr_buyer' => $usr_buyer,
             'usr_seller' => $usr_seller,
             'rating' => $rating,
+            'rating_avg' => $rating_avg,
+            'rating_count' => $rating_count,
             'ratingLapak' => $ratingLapak,
         ]);
     }

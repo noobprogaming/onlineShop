@@ -150,26 +150,23 @@ class PayController extends Controller
     public function detailTransaction($purchase_id) {
         $id = Auth::user()->id;
 
-        $invoice = Transaction::select('purchase.purchase_id', 'purchase.total_price', 'purchase.shipping_price', 'purchase.note')
-                            ->join('purchase', 'purchase.purchase_id', '=', 'transaction.purchase_id')
-                            ->where('transaction.pay', 'N')
-                            ->where('purchase.buyer_id', $id)
+        $invoice = Purchase::select('purchase.purchase_id', 'purchase.total_price', 'purchase.shipping_price', 'purchase.note')
+                            ->where('purchase.confirm_id', '1')
                             ->where('purchase.purchase_id', $purchase_id)
                             ->first();
-
-        if ($invoice == 1) {
+        $total = 0;
+        if ($invoice->count() == 1) {
             echo "
-            Invoice no: ". $invoice['purchase_id'] ."<br>
-            Price: Rp". $invoice['total_price'] ."<br>
-            Shipping: Rp". $invoice['shipping_price'] ."<br>
-            Note: ". $invoice['note'] ."<br><br>
-    
-            Total Price: Rp". $invoice['total_price'] . $invoice['shipping_price'] ."<br>
-            Trf to: EISER<br> 
+            Nomor transaksi: ". $invoice['purchase_id'] ."<br>
+            Harga Barang: Rp". $invoice['total_price'] ."<br>
+            Biaya Pengiriman: Rp". $invoice['shipping_price'] ."<br>
+            Catatan: ". $invoice['note'] ."<br>
+            Total Harga: Rp". number_format($invoice['total_price']) ." + ". number_format($invoice['shipping_price']) ."<br><br>
+            Transfer ke: PT. BAKUL INDONESIA<br> 
                 538 0004149 BANK MUAMALAT INDONESIA<br>
-            Trf : Rp". $invoice['total_price'] . $invoice['shipping_price'] ."
+            Nominal transfer : Rp". number_format($invoice['total_price']) ." + ". number_format($invoice['shipping_price']) ."
             ";
-        } elseif ($invoice == 0) {
+        } elseif ($invoice->count() == 0) {
             echo "Transaksi sudah dibayar!";
         }
     }

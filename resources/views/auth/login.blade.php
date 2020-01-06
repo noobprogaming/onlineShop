@@ -60,7 +60,7 @@
                         
                     </form>
                     <hr>
-                    <a class="mt-5 nav-link" href="{{ route('register') }}">Belum punya akun?</a>
+                    <a class="mt-5 grey" href="{{ route('register') }}">Belum punya akun?</a>
                 </div>
             </div>
         </div>

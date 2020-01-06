@@ -91,8 +91,8 @@ class CartController extends Controller
                     }
                     echo "
                     <div class='card-footer bold'>
-                    Total harga ".number_format(($total_price),2,',','.')."
-                    <button class='btn btn-sm btn-primary' onclick='getCheckout(". $n['purchase_id'] .")'>Bayar</button>
+                    Total harga Rp".number_format(($total_price),2,',','.')."
+                    <button class='btn btn-sm btn-login' onclick='getCheckout(". $n['purchase_id'] .")'>Bayar</button>
                     </div>
                     ";
                     echo "
