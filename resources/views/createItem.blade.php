@@ -1,16 +1,21 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container my-5">
+    <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">Sell Item</div>
+                <div class="card-body py-5">
 
-                <div class="card-body">
                     @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
                     </div>
                     @endif
+
+                    <div class="text-center mb-5">
+                        <h4>Tambah Barang</h4>
+                    </div>
 
                     <form action="{{ route('setCreateItem') }}" method="post" enctype="multipart/form-data">
                         {{ csrf_field() }}
@@ -100,22 +105,20 @@
                         </div>
 
                         <div class="form-group row">
-                                <label for="weight"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Weight') }}</label>
-    
-                                <div class="col-md-6">
-                                    <input id="weight" type="number" min=0
-                                        class="form-control @error('weight') is-invalid @enderror"
-                                        name="weight" value="{{ old('weight') }}" required
-                                        autocomplete="weight">
-    
-                                    @error('weight')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                    @enderror
-                                </div>
+                            <label for="weight" class="col-md-4 col-form-label text-md-right">{{ __('Weight') }}</label>
+
+                            <div class="col-md-6">
+                                <input id="weight" type="number" min=0
+                                    class="form-control @error('weight') is-invalid @enderror" name="weight"
+                                    value="{{ old('weight') }}" required autocomplete="weight">
+
+                                @error('weight')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                                @enderror
                             </div>
+                        </div>
 
                         <div class="form-group row">
                             <label for="category_id"
@@ -130,14 +133,17 @@
                             </div>
                         </div>
 
-                        <input type="file"  name="file_a">
-                        <input type="file"  name="file_b">
-                        <div class="form-group row mb-0">
+                        <div class="form-group row mb-0 my-3">
                             <div class="col-md-6 offset-md-4">
-                                <br>
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-shopping-bag"></i>
-                                     Insert to MyShop
+                                <input type="file"  name="file_a">
+                        <input type="file" name="file_b">
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0 my-3">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-login w-50">
+                                    Tambah
                                 </button>
                             </div>
                         </div>
@@ -147,5 +153,5 @@
                 </div>
             </div>
 
-    
+
             @endsection

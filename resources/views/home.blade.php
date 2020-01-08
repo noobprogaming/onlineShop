@@ -12,8 +12,8 @@
     <div class="container">
         <div class="row flex-row-reverse">
             <div class="col-lg-9">
-                <div class="product_top_bar">
-                    <div class="left_dorp col col-md-12">
+                <div class="product_top_bar" style="background-color: #FFFFFF">
+                    <div class="left_dorp col col-md-12" >
                         <select onchange="sortBy()" id="sort" class="sorting">
                             <option selected>Urutkan</option>
                             <option value="priceLowHigh">Termurah - termahal</option>
@@ -24,13 +24,23 @@
 
                 <div class="latest_product_inner">
                     <div class="row" id="item">
+
+                        @for ($x = 0; $x <= 8; $x++)
+                        <div class='col-lg-12 hide'>
+                            <div class='single-product border'>
+                                <div class='product-btm tap'>
+                                </div>
+                            </div>
+                        </div>
+                        @endfor
+
                     </div>
                 </div>
             </div>
 
             <div class="col-lg-3">
                 <div class="left_sidebar_area">
-                    <aside class="left_widgets p_filter_widgets">
+                    <aside class="left_widgets p_filter_widgets pb-3" style="background-color: #FFFFFF">
                         <div class="l_w_title">
                             <h3>Cari produk</h3>
                         </div>
@@ -48,7 +58,7 @@
                         </div>
                     </aside>
 
-                    <aside class="left_widgets p_filter_widgets">
+                    <aside class="left_widgets p_filter_widgets pb-3" style="background-color: #FFFFFF">
                         <div class="l_w_title">
                             <h3>Kategori</h3>
                         </div>
@@ -68,9 +78,6 @@
         </div>
     </div>
 </section>
-
-<div class="row" id="item">
-</div>
 
 <script>
     //setup before functions

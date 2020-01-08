@@ -9,7 +9,7 @@
 @endif
 
 <div class="product_image_area">
-    <div class="container">
+    <div class="container" style="background-color: #FFFFFF">
         <div class="row s_product_inner">
             <div class="col-lg-6">
                 <div class="s_product_img">
@@ -72,8 +72,6 @@
                     <p>
                         @if (!empty($usr_seller[0]['description']))
                         {{ $usr_seller[0]['description'] }}
-                        {{ $usr_seller[0]['description'] }}
-                        {{ $usr_seller[0]['description'] }}
                         @else
                         {{ "No description" }}
                         @endif
@@ -84,6 +82,13 @@
 
                     <div class="card_area">
                         <div>
+                            @if ($usr_seller[0]['id'] == Auth::user()->id || empty(Auth::user()->id))
+
+                            <a class="btn btn-login" href="{{ route('updateItem', ['item_id'=>$usr_seller[0]['item_id']]) }}"><i
+                                class="fa fa-pencil"></i>Ubah Barang</a>
+        
+                            @endif
+
                             @if ($usr_seller[0]['id'] == Auth::user()->id || empty(Auth::user()->id))
 
                             <div class="value-button" id="decrease">-</div>
@@ -113,7 +118,7 @@
     </div>
 </div>
 
-<section class="product_description_area">
+<section class="product_description_area" style="background-color: #FFFFFF">
     <div class="container">
         <ul class="nav nav-tabs" id="myTab" role="tablist">
             <li class="nav-item">

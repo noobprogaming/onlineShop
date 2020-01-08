@@ -5,10 +5,10 @@
     <div class="row justify-content-center">
         <div class="col-md-4">
             <div class="card">
-                <div class="card-body py-5" style="background-color: #F0F0F0">
+                <div class="card-body py-5">
 
                     <div class="text-center mb-5">
-                        <h4>SIGN IN</h4>
+                        <h4>Masuk Menggunakan Akun Bakul</h4>
                     </div>
 
                     <form method="POST" action="{{ route('login') }}">

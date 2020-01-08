@@ -22,6 +22,7 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
     <link href="{{ asset('css/custom.css') }}" rel="stylesheet">
+    <link rel="icon" href="{{ asset('img/icon.png') }}">
     <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"
         integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
 
@@ -57,9 +58,9 @@
 
 </head>
 
-<body>
+<body style="background-color: #F8F9F9">
     <div id="app">
-        <header class="header_area shadow">
+        <header class="header_area">
             {{-- <div class="top_menu">
                 <div class="container">
                 </div>
@@ -81,6 +82,18 @@
                         <!-- Collect the nav links, forms, and other content for toggling -->
                         <div class="collapse navbar-collapse offset w-100" id="navbarSupportedContent">
                             <div class="row w-100 mr-0">
+                                @guest
+                                <div class="col-lg-7 pr-0">
+                                    <ul class="nav navbar-nav center_nav pull-right">
+                                        <li class="nav-item">
+                                            <a class="nav-link"></a>
+                                        </li>
+                                        <li class="nav-item">
+                                            <a class="nav-link"></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                @else
                                 <div class="col-lg-7 pr-0">
                                     <ul class="nav navbar-nav center_nav pull-right">
                                         <li class="nav-item">
@@ -89,14 +102,21 @@
                                         <li class="nav-item">
                                             <a class="nav-link" href="{{ route('transaction') }}">Transaksi</a>
                                         </li>
+                                        @if(Auth::user()->email == "admin@admin")
+                                        <li class="nav-item">
+                                            <a class="nav-link blue" href="{{ route('admin') }}">Admin Panel</a>
+                                        </li>
+                                        @endif
                                     </ul>
                                 </div>
+                                @endguest
+                                
 
                                 <div class="col-lg-5 pr-0">
                                     <ul class="nav navbar-nav navbar-right right_nav pull-right">
                                         @guest
                                         <li class="nav-item">
-                                            <a class="nav-link" href="{{ route('login') }}">SIGN IN</a>
+                                            <a class="nav-link" href="{{ route('login') }}">Akun</a>
                                         </li>
                                         @else
 
@@ -161,7 +181,7 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-sm btn-danger" data-dismiss="modal">Keluar</button>
                     </div>
                 </div>
             </div>
@@ -232,7 +252,7 @@
             $("#cartCount").load("{{ route('cartCount') }}");
             $("#cartList").load("{{ route('cartList') }}");
             $('#cartModal').modal('show');
-            alert("Barang telah ditambahkan!")
+            // alert("Barang telah ditambahkan!")
         });
     }
 
@@ -241,7 +261,7 @@
             type: "GET",
             url: "/deleteCart/" + itemId,
         }).done(function () {
-            alert("Barang telah dihapus!")
+            alert("Barang berhasil dihapus!")
             $("#cartCount").load("{{ route('cartCount') }}");
             getCartList();
         });
@@ -257,8 +277,8 @@
         window.location.assign("{{ route('profile', '') }}" + '/' + seller_id);
     }
 
-    function getCheckout(purchase_id) {
-        window.location.assign("{{ route('checkout', '') }}" + '/' + purchase_id);
+    function getCheckout(purchase_id, seller_id, buyer_id) {
+        window.location.assign("{{ route('checkout', ['purchase_id' => '', 'seller_id' => '', 'buyer_id' => '']) }}" + '/' + purchase_id + '/' + seller_id + '/' + buyer_id);
     }
 
 </script>

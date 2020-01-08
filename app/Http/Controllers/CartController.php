@@ -40,7 +40,7 @@ class CartController extends Controller
         ->where('purchase.confirm_id', 1)
         ->where('purchase_item.buyer_id', $id)->get();
 
-        $cartSeller = Purchase_item::select('users.id', 'users.name AS seller', 'purchase_item.purchase_id')
+        $cartSeller = Purchase_item::select('purchase.seller_id', 'purchase.buyer_id', 'users.name AS seller', 'purchase_item.purchase_id')
         ->join('users', 'purchase_item.seller_id', '=', 'users.id')
         ->join('purchase', 'purchase.purchase_id', '=', 'purchase_item.purchase_id')
         ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
@@ -50,11 +50,11 @@ class CartController extends Controller
         foreach($cartSeller as $n) {
             echo "
             <div>
-                <div class='card'>
+                <div class='card mb-3'>
                     <div class='card-header'>
-                    <p class='tap bold' onclick='getProfilePelapak(". $n['id'] .")'>
+                    <h6 class='tap mt-1' onclick='getProfilePelapak(". $n['seller_id'] .")'>
                     <i class='fa fa-university'></i>
-                    ". $n['seller'] ." #ID_trx:". $n['purchase_id'] ."</p>
+                    ". $n['seller'] ."</h6>
                     </div>
                     <hr>
                     ";
@@ -63,24 +63,25 @@ class CartController extends Controller
                     foreach($cartList as $j) {
                         if($n['seller'] == $j['seller']) {
                             echo "
-                            <div class='mx-3'>
+                            <div style='margin-left: 33px; margin-right: 5px'>
                                 <div class='row'>
-                                    <div class='col-md-11'>
-                                        <p class='tap' onclick='getItemDetail(". $j['item_id'] .")'>". $j['name'] ."</p>
-                                        <p>
-                                            <div class='value-button' id='decrease' onclick='decreaseValue()'
-                                            value='Decrease Value'>-</div>
-                                            <input id='number' type='number' class=' @error('amount') is-invalid @enderror'
-                                                name='amount' value='". $j['amount'] ."' required>
-                                            <div class='value-button' id='increase' onclick='increaseValue()'
-                                                value='Increase Value'>+</div>
+                                    <div class='col-md-12 row'>
+                                        <div class='col col-md-6 text-left'>
+                                        <p class='tap' onclick='getItemDetail(". $j['item_id'] .")'>
+                                        ". $j['name'] ."
                                         </p>
+                                        </div>
+                                        <div class='col col-md-2 text-center'>
                                         <p>
-                                            Rp". number_format($j['selling_price'],2,',','.') ."
+                                        ". $j['amount'] ."
+                                        </p>
+                                        </div>
+                                        <div class='col col-md-4 text-right'>
+                                        <p>
+                                            Rp". number_format($j['selling_price'],2,',','.') ."<br>
+                                            <i class='fa fa-trash red' onclick='deleteItem(". $j['item_id'] .")'></i>
                                         </p>  
-                                    </div>
-                                    <div class='col-md-1'>
-                                        <i class='fa fa-trash lightGrey' onclick='deleteItem(". $j['item_id'] .")'></i>  
+                                        </div> 
                                     </div>
                                 </div>
                             </div>
@@ -90,9 +91,20 @@ class CartController extends Controller
                         }
                     }
                     echo "
-                    <div class='card-footer bold'>
-                    Total harga Rp".number_format(($total_price),2,',','.')."
-                    <button class='btn btn-sm btn-login' onclick='getCheckout(". $n['purchase_id'] .")'>Bayar</button>
+                    <div class='card-footer'>
+                        <div class='row' style='margin: 0'>
+                            <div class='col text-left'>
+                                <h6 class='mt-1'>Subtotal</h6>
+                            </div>
+                            <div class='col text-right'>
+                                <h6>Rp".number_format(($total_price),2,',','.')."</h6>
+                            </div>
+                        </div>
+                        <div class='row'>
+                            <div class='col text-right' style='margin-right: 14px'>
+                                <button class='btn btn-sm btn-login' onclick='getCheckout(". $n['purchase_id'] .",". $n['seller_id'] .",". $n['buyer_id'] .")'>Bayar</button>
+                            </div>
+                        </div>
                     </div>
                     ";
                     echo "

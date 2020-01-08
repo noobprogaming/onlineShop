@@ -134,7 +134,7 @@ class OngkirController extends Controller
 
         $array_result = json_decode($json, true);
 
-        echo "<input id='shipping' list='shipping_list' class='w-50' placeholder='Kurir'>";
+        echo "<input id='shipping' list='shipping_list' style='width: 35%' placeholder='Kurir'>";
         echo "<datalist id='shipping_list'>";
         echo $array_result['rajaongkir']['results'][0]['name'];
         for ($i=0; $i < count($array_result['rajaongkir']['results'][0]['costs']); $i++) {
@@ -142,7 +142,7 @@ class OngkirController extends Controller
             $price = $array_result['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['value'];;
             $etd = $array_result['rajaongkir']['results'][0]['costs'][$i]['cost'][0]['etd'];
 
-            echo "<option value='$price'>$service . $price . $etd </option>";
+            echo "<option value='$price'>$service - Rp".number_format($price)." - $etd </option>";
         }        
         echo "</datalist>";
     }

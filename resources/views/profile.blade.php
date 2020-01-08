@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-lg-8">
                 <div class="blog_left_sidebar">
-                    <div class="product_top_bar mb-4">
+                    <div class="product_top_bar mb-4" style="background-color: #FFFFFF">
                         <div class="left_dorp col col-md-12">
                             <select onchange="sortBy()" id="sort" class="sorting">
                                 <option>Urutkan</option>
@@ -23,7 +23,7 @@
                         </div>
                     </div>
 
-                    <div class="latest_product_inner">
+                    <div class="latest_product_inner" >
                         <div class="row" id="item">
                             @foreach($item as $n)
 
@@ -42,6 +42,15 @@
 
                             @endforeach
 
+                            @for ($x = 0; $x <= 12; $x++)
+                            <div class="col-md-12 hide">
+                                <div class="card">
+                                    <div class="card-body">
+                                    </div>
+                                </div>
+                            </div>
+                            @endfor
+
                             <div class="pagination">
                                 {{ $item->links() }}
                             </div>
@@ -51,7 +60,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="blog_right_sidebar">
-                    <aside class="single_sidebar_widget post_category_widget">
+                    <aside class="single_sidebar_widget post_category_widget" style="background-color: #FFFFFF">
                         <h4 class="widget_title">Pelapak</h4>
                         <ul class="list cat-list">
                             <li>

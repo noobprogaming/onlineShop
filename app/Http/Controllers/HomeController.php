@@ -14,7 +14,7 @@ class HomeController extends Controller
 {
 
     public function index() {
-        $category = Category::get();
+        $category = Category::all();
 
         return view('home', [
             'category' => $category,
@@ -94,6 +94,7 @@ class HomeController extends Controller
         $item = Item::select('item.name')
         ->distinct()
         ->where('item.name', 'LIKE', '%'.$request->nameItem.'%')
+        ->whereNotIn('item.id', [Auth::user()->id])
         ->get();
 
         foreach($item as $n) {

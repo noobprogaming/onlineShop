@@ -4,7 +4,7 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-12">
-            <div class="card shadow">
+            <div class="card">
                 <div class="card-body py-5">
 
                     <div class="text-center mb-5">
@@ -51,8 +51,8 @@
 
                                     <div class="col-md-8">
 
-                                        <input id="photo_profile" @error('photo_profile') is-invalid @enderror type="file"
-                                            name="photo_profile">
+                                        <input id="photo_profile" @error('photo_profile') is-invalid @enderror
+                                            type="file" name="photo_profile">
 
                                         @error('photo_profile')
                                         <span class="invalid-feedback" role="alert">
@@ -63,12 +63,13 @@
                                 </div>
 
                                 <div class="form-group row">
-                                    <label for="name" class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
+                                    <label for="name"
+                                        class="col-md-4 col-form-label text-md-right">{{ __('Nama') }}</label>
 
                                     <div class="col-md-8">
                                         <input id="name" type="text"
                                             class="form-control @error('name') is-invalid @enderror" name="name"
-                                            value="{{ $usr[0]['name'] }}" required autocomplete="name" >
+                                            value="{{ $usr[0]['name'] }}" required autocomplete="name">
 
                                         @error('name')
                                         <span class="invalid-feedback" role="alert">
@@ -85,7 +86,7 @@
                                     <div class="col-md-8">
                                         <input id="email" type="email"
                                             class="form-control @error('name') is-invalid @enderror" name="email"
-                                            value="{{ $usr[0]['email'] }}" required autocomplete="email" >
+                                            value="{{ $usr[0]['email'] }}" required autocomplete="email">
 
                                         @error('email')
                                         <span class="invalid-feedback" role="alert">
@@ -102,8 +103,7 @@
                                     <div class="col-md-8">
                                         <input id="phone_number" type="text"
                                             class="form-control @error('name') is-invalid @enderror" name="phone_number"
-                                            value="{{ $usr[0]['phone_number'] }}" required autocomplete="phone_number"
-                                            >
+                                            value="{{ $usr[0]['phone_number'] }}" required autocomplete="phone_number">
 
                                         @error('phone_number')
                                         <span class="invalid-feedback" role="alert">
@@ -119,7 +119,8 @@
 
                                     <div class="col-md-8">
                                         <input id="password" type="password"
-                                            class="form-control @error('password') is-invalid @enderror" name="password" >
+                                            class="form-control @error('password') is-invalid @enderror"
+                                            name="password">
 
                                         @error('password')
                                         <span class="invalid-feedback" role="alert">
@@ -128,23 +129,24 @@
                                         @enderror
                                     </div>
                                 </div>
-                            <div class="form-group row">
-                                <label for="password-confirm"
-                                    class="col-md-4 col-form-label text-md-right">{{ __('Konfirmasi Kata Sandi') }}</label>
+                                <div class="form-group row">
+                                    <label for="password-confirm"
+                                        class="col-md-4 col-form-label text-md-right">{{ __('Konfirmasi Kata Sandi') }}</label>
 
-                                <div class="col-md-8">
-                                    <input id="password-confirm" type="password" class="form-control">
+                                    <div class="col-md-8">
+                                        <input id="password-confirm" type="password" class="form-control">
+                                        <p id="alertPassword"></p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            <div class="form-group row mb-0">
-                                <div class="col-md-8 offset-md-4">
-                                    <button id="btnUpdateProfile" type="submit" class="btn btn-login w-100">
-                                        {{ __('Ubah') }}
-                                    </button>
+                                <div class="form-group row mb-0">
+                                    <div class="col-md-8 offset-md-4">
+                                        <button id="btnUpdateProfile" type="submit" class="btn btn-login w-100">
+                                            {{ __('Ubah') }}
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </form>
+                            </form>
                         </div>
 
 
@@ -228,8 +230,9 @@
 
                                         <div class="col-md-8">
                                             <input id="address" type="text"
-                                                class="form-control @error('address') is-invalid @enderror" name="address" placeholder="Rumah putih, No. 10, RT01/RW01"
-                                                value="{{ $usr[0]['address'] }}" autocomplete="address" >
+                                                class="form-control @error('address') is-invalid @enderror"
+                                                name="address" placeholder="Rumah putih, No. 10, RT01/RW01"
+                                                value="{{ $usr[0]['address'] }}" autocomplete="address">
 
                                             @error('address')
                                             <span class="invalid-feedback" role="alert">
@@ -240,99 +243,111 @@
                                     </div>
                                 </div>
                             </form>
-                            
+
                         </div>
 
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
 
+<script>
+    $('#password-confirm').on('keyup', function () {
+        var password = $('#password').val();
+        var passwordConfirm = $('#password-confirm').val();
 
-    <script>
-        $('#password-confirm').on('keyup', function () {
-            var password = $('#password').val();
-            var passwordConfirm = $('#password-confirm').val();
+        var delayInMilliseconds = 1000;
+        if (password != passwordConfirm) {
+            setTimeout(function() {
+            document.getElementById("alertPassword").classList.remove("green");
+            document.getElementById("alertPassword").classList.add("red");
+            $("#alertPassword").html("Kata sandi tidak sesuai");
+            document.getElementById("btnUpdateProfile").disabled = true;
+            }, delayInMilliseconds);
 
-            if (password != passwordConfirm) {
-                document.getElementById("btnUpdateProfile").disabled = true;
-            } else {
-                document.getElementById("btnUpdateProfile").disabled = false;
-            }
-        })
+        } else {
+            setTimeout(function() {
+            document.getElementById("alertPassword").classList.remove("red");
+            document.getElementById("alertPassword").classList.add("green");
+            $("#alertPassword").html("Kata sandi sesuai");
+            document.getElementById("btnUpdateProfile").disabled = false;
+        }, delayInMilliseconds);
+        }
+    })
 
-        $(document).ready(function () {
-            $.ajax({
-                type: "GET",
-                url: "{{  route('getprovinceLocal') }}",
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#province").html(data);
-                    document.getElementsById("alamat").setAttribute("selectBoxOptions",
-                        "democlass");
-                },
-            });
+    $(document).ready(function () {
+        $.ajax({
+            type: "GET",
+            url: "{{  route('getprovinceLocal') }}",
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#province").html(data);
+                document.getElementsById("alamat").setAttribute("selectBoxOptions",
+                    "democlass");
+            },
         });
+    });
 
-        $('#province').change(function () {
-            //Mengambil value dari option select province kemudian parameternya dikirim menggunakan ajax 
-            var province_id = $('#province').val();
+    $('#province').change(function () {
+        //Mengambil value dari option select province kemudian parameternya dikirim menggunakan ajax 
+        var province_id = $('#province').val();
 
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getcityLocal') }}",
-                data: "province_id=" + province_id,
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#city").html(data);
-                },
-            });
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getcityLocal') }}",
+            data: "province_id=" + province_id,
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#city").html(data);
+            },
         });
+    });
 
-        $('#city').change(function () {
-            //Mengambil value dari option select province kemudian parameternya dikirim menggunakan ajax 
-            var city_name = document.getElementById("city").options[this.selectedIndex].innerHTML;
+    $('#city').change(function () {
+        //Mengambil value dari option select province kemudian parameternya dikirim menggunakan ajax 
+        var city_name = document.getElementById("city").options[this.selectedIndex].innerHTML;
 
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getPostalLocal') }}",
-                data: "city_name=" + city_name,
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#postal").html(data);
-                },
-            });
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getPostalLocal') }}",
+            data: "city_name=" + city_name,
+            beforeSend: function () {
+                //console.log("loading");
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                //console.log(data);
+                $("#postal").html(data);
+            },
         });
+    });
 
-        $('#postal').change(function () {
-            //Mengambil value dari option select province kemudian parameternya dikirim menggunakan ajax 
-            var postal_code = $('#postal').val();
+    $('#postal').change(function () {
+        //Mengambil value dari option select province kemudian parameternya dikirim menggunakan ajax 
+        var postal_code = $('#postal').val();
 
-            $.ajax({
-                type: "GET",
-                url: "{{ route('getUrbanLocal') }}",
-                data: "postal_code=" + postal_code,
-                beforeSend: function () {
-                    //console.log("loading");
-                    //$("#tes").val("loading");
-                },
-                success: function (data) {
-                    //console.log(data);
-                    $("#urban").html(data);
-                },
-            });
+        $.ajax({
+            type: "GET",
+            url: "{{ route('getUrbanLocal') }}",
+            data: "postal_code=" + postal_code,
+            beforeSend: function () {
+                //$("#tes").val("loading");
+            },
+            success: function (data) {
+                $("#urban").html(data);
+            },
         });
+    });
 
-    </script>
-    @endsection
+</script>
+@endsection

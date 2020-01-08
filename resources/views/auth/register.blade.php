@@ -4,7 +4,7 @@
 <div class="container my-5">
     <div class="row justify-content-center">
         <div class="col-md-4">
-            <div class="card pb-5" style="background-color: #F0F0F0">
+            <div class="card pb-5">
                 <div class="card-body py-5">
 
                     <div class="text-center mb-5">

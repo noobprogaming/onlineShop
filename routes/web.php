@@ -19,6 +19,9 @@ Route::get('getItem', 'HomeController@getItem')->name('getItem');
 Route::get('getListItem', 'HomeController@getListItem')->name('getListItem');
 Route::get('getItemCategory', 'HomeController@getItemCategory')->name('getItemCategory');
 
+Route::get('admin', 'AdminController@index')->name('admin');
+Route::post('updateAdminTransaction', 'AdminController@updateAdminTransaction')->name('updateAdminTransaction');
+
 Route::get('profile/{id}', 'ProfileController@index')->name('profile');
 Route::get('profileUpdate/{id}', 'ProfileController@profileUpdate')->name('profileUpdate');
 Route::post('setProfileUpdate/{id}', 'ProfileController@setProfileUpdate')->name('setProfileUpdate');
@@ -29,7 +32,7 @@ Route::get('cartList', 'CartController@cartList')->name('cartList');
 Route::post('storeCart','CartController@storeCart')->name('storeCart');
 Route::get('deleteCart/{item_id}','CartController@deleteCart')->name('deleteCart');
 
-Route::get('checkout/{purchase_id}','PayController@checkout')->name('checkout');
+Route::get('checkout/{purchase_id}/{seller_id}/{buyer_id}','PayController@checkout')->name('checkout');
 Route::post('storePayment', 'PayController@storePayment')->name('storePayment');
 Route::post('storeTransaction', 'PayController@storeTransaction')->name('storeTransaction');
 Route::post('updateTransaction', 'PayController@updateTransaction')->name('updateTransaction');

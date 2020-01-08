@@ -25,47 +25,53 @@ class PayController extends Controller
         $this->middleware('auth');
     }
 
-    public function checkout($purchase_id) {
+    public function checkout($purchase_id, $seller_id, $buyer_id) {
 
         $id = Auth::user()->id;
+        $str_id = strval($id);
 
-        $status = Purchase::select('shipping_price', 'note', 'confirm_id', 'resi')->where('purchase_id', $purchase_id)->first();
+        if($str_id == $seller_id || $str_id == $buyer_id || Auth::user()->email == "admin@admin") {
 
-        $usr_buyer = User::select('users.name', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code', 'city.city_id', 'city.city_name', 'province.province_name')
-        ->distinct()
-        ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('postal', 'postal.postal_code', '=', 'location.postal_code')
-        ->join('city', 'city.city_id', '=', 'location.city_id')
-        ->join('province', 'province.province_id', '=', 'location.province_id')
-        ->where('users.id', $id)
-        ->get();
+            $status = Purchase::select('shipping_price', 'note', 'confirm_id', 'resi')->where('purchase_id', $purchase_id)->first();
 
-        if ($usr_buyer->count() == 0) {
-            return redirect()->route('profileUpdate', $id)->with('status', 'Lengkapi profil!'); // return ke profil, tambah alamat
+            $usr_buyer = User::select('users.name', 'users.phone_number', 'location.address', 'postal.district', 'location.postal_code', 'city.city_id', 'city.city_name', 'province.province_name')
+            ->distinct()
+            ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
+            ->join('postal', 'postal.postal_code', '=', 'location.postal_code')
+            ->join('city', 'city.city_id', '=', 'location.city_id')
+            ->join('province', 'province.province_id', '=', 'location.province_id')
+            ->where('users.id', $buyer_id)
+            ->get();
+    
+            if ($usr_buyer->count() == 0) {
+                return redirect()->route('profileUpdate', $buyer_id)->with('status', 'Lengkapi profil!'); // return ke profil, tambah alamat
+            }
+    
+            $cartList = Purchase_item::select('users.name AS seller', 'purchase_item.amount', 'purchase_item.selling_price', 'item.item_id', 'item.name', 'item.weight')
+            ->join('users', 'purchase_item.seller_id', '=', 'users.id')
+            ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
+            ->where('purchase_item.buyer_id', $buyer_id)->get();
+    
+            $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
+            ->join('users', 'purchase_item.seller_id', '=', 'users.id')
+            ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
+            ->join('city', 'city.city_id', '=', 'location.city_id')
+            ->join('province', 'province.province_id', '=', 'location.province_id')
+            ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
+            ->where('purchase_item.buyer_id', $buyer_id)
+            ->where('purchase_item.purchase_id', $purchase_id)
+            ->distinct()->get();
+    
+            return view('checkout', [
+                'status' => $status,
+                'usr_buyer' => $usr_buyer,
+                'cartList' => $cartList,
+                'cartSeller' => $cartSeller,
+            ]);
+    
+        } else {
+            return redirect()->route('home');
         }
-
-        $cartList = Purchase_item::select('users.name AS seller', 'purchase_item.amount', 'purchase_item.selling_price', 'item.item_id', 'item.name', 'item.weight')
-        ->join('users', 'purchase_item.seller_id', '=', 'users.id')
-        ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
-        ->where('purchase_item.buyer_id', $id)->get();
-
-        $cartSeller = Purchase_item::select('purchase_item.seller_id', 'users.name AS seller', 'location.city_id', 'location.province_id', 'city.city_name', 'province.province_name')
-        ->join('users', 'purchase_item.seller_id', '=', 'users.id')
-        ->join('location', 'users.id', '=',  'location.user_id', 'LEFT OUTER')
-        ->join('city', 'city.city_id', '=', 'location.city_id')
-        ->join('province', 'province.province_id', '=', 'location.province_id')
-        ->join('item', 'purchase_item.item_id', '=', 'item.item_id')
-        ->where('purchase_item.buyer_id', $id)
-        ->where('purchase_item.purchase_id', $purchase_id)
-        ->distinct()->get();
-
-        return view('checkout', [
-            'status' => $status,
-            'usr_buyer' => $usr_buyer,
-            'cartList' => $cartList,
-            'cartSeller' => $cartSeller,
-        ]);
-
 
     }
 
@@ -150,23 +156,106 @@ class PayController extends Controller
     public function detailTransaction($purchase_id) {
         $id = Auth::user()->id;
 
-        $invoice = Purchase::select('purchase.purchase_id', 'purchase.total_price', 'purchase.shipping_price', 'purchase.note')
+        $invoice = Purchase::select('users.name AS seller', 'purchase.purchase_id', 'purchase.total_price', 'purchase.shipping_price', 'purchase.note')
+                            ->join('users', 'users.id', '=', 'purchase.seller_id')
                             ->where('purchase.confirm_id', '1')
                             ->where('purchase.purchase_id', $purchase_id)
                             ->first();
-        $total = 0;
-        if ($invoice->count() == 1) {
+
+        if (!empty(json_decode($invoice, true))) {
+            $price = $invoice['total_price'] + $invoice['shipping_price'];
+            if(!empty($invoice['note'])) {
+                $note = $invoice['note'];
+            } else {
+                $note = " - ";
+            }
             echo "
-            Nomor transaksi: ". $invoice['purchase_id'] ."<br>
-            Harga Barang: Rp". $invoice['total_price'] ."<br>
-            Biaya Pengiriman: Rp". $invoice['shipping_price'] ."<br>
-            Catatan: ". $invoice['note'] ."<br>
-            Total Harga: Rp". number_format($invoice['total_price']) ." + ". number_format($invoice['shipping_price']) ."<br><br>
-            Transfer ke: PT. BAKUL INDONESIA<br> 
-                538 0004149 BANK MUAMALAT INDONESIA<br>
-            Nominal transfer : Rp". number_format($invoice['total_price']) ." + ". number_format($invoice['shipping_price']) ."
+            <div>
+                <div class='row'>
+                    <div class='col text-left'>
+                    Nomor transaksi
+                    </div>
+                    <div class='col text-right'>
+                    #". $invoice['purchase_id'] ."
+                    </div>
+                </div>
+                <hr>
+                <div class='row'>
+                    <div class='col text-left'>
+                        <h5>Pelapak</h5>
+                        </div>
+                        <div class='col text-right'>
+                        <h5>". $invoice['seller'] ."</h5>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class='mx-3'>
+                    <div class='row'>
+                        <div class='col text-left'>
+                        Catatan
+                        </div>
+                        <div class='col text-right'>
+                        ". $note ."
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class='row'>
+                    <div class='col text-left'>
+                    Subtotal
+                    </div>
+                    <div class='col text-right'>
+                    Rp". number_format($invoice['total_price']) ."
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col text-left'>
+                    Biaya Pengiriman
+                    </div>
+                    <div class='col text-right'>
+                    Rp". number_format($invoice['shipping_price']) ."
+                    </div>
+                </div>
+                <div class='row bold mt-2'>
+                    <div class='col text-left'>
+                    <h5>Total Harga</h5>
+                    </div>
+                    <div class='col text-right'>
+                    <h5>Rp". number_format($price) ."</h5>
+                    </div>
+                </div>
+                <hr>
+                <div class='row mt-2'>
+                    <div class='col text-left'>
+                    Metode Pembayaran
+                    </div>
+                    <div class='col text-right'>
+                    <object data='". asset('img/muamalat_logo.svg') ."' type='image/svg+xml'></object>
+                    </div>
+                </div>
+                <div class='row my-2'>
+                    <div class='col text-left'><br>
+                    Transfer ke
+                    </div>
+                    <div class='col text-right'>
+                    PT. BAKUL INDONESIA<br> 
+                    538 000 4149 <br>
+                    BANK MUAMALAT INDONESIA<br>
+                    </div>
+                </div>
+                <div class='row'>
+                    <div class='col text-left'>
+                    <h5>Nominal transfer </h5>
+                    </div>
+                    <div class='col text-right'>
+                    <h5>Rp". number_format($price) ."</h5>
+                    </div>
+                </div>
+                <hr>
+            </div>
             ";
-        } elseif ($invoice->count() == 0) {
+        } else {
             echo "Transaksi sudah dibayar!";
         }
     }

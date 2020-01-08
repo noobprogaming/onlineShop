@@ -1,51 +1,58 @@
 @extends('layouts.app')
 
 @section('content')
+<div class="container my-5">
+    <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card">
-                <div class="card-header">
-                    <div class="row">
-                        <div class="col text-left">Update Item</div>
-                        <div class="col text-right">
-                            <div class="tap btn btn-danger btn-sm" data-toggle="modal"
-                            data-target="#deleteItemModal">
-                                <i class="fa fa-trash"></i>
-                                Delete
+                <div class="card-body py-5">
+
+                    <div class="text-center mb-5">
+                        <div class="row">
+                            <div class="col text-left">
+                                <h4>Update Item</h4>
+                            </div>
+                            <div class="col text-right">
+                                <div class="tap btn btn-danger btn-sm" data-toggle="modal"
+                                    data-target="#deleteItemModal">
+                                    <i class="fa fa-trash"></i>
+                                    Delete
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="modal fade" id="deleteItemModal">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h4 class="modal-title">Confirm Delete Item</h4>
-                            </div>
-                            <div class="modal-body">
-                                <h6>Anda akan menghapus data. Ketik "DELETE" untuk konfirmasi.</h6>
-                                <input type="text" id="funDelete" placeholder="DELETE">
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-sm mr-auto" onclick="funDelete()">Confirm Delete</button>
-                                <button type="button" class="btn btn-sm btn-danger"
-                                    data-dismiss="modal">Cancel</button>
+                    <div class="modal fade" id="deleteItemModal">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Confirm Delete Item</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <h6>Anda akan menghapus data. Ketik "DELETE" untuk konfirmasi.</h6>
+                                    <input type="text" id="funDelete" placeholder="DELETE">
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm mr-auto" onclick="funDelete()">Confirm
+                                        Delete</button>
+                                    <button type="button" class="btn btn-sm btn-danger"
+                                        data-dismiss="modal">Cancel</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <script>
-                    function funDelete() {
-                        if (document.getElementById("funDelete").value == "DELETE") {
-                            window.location.assign(
-                                "{{ route('deleteItem', ['id'=>$usr[0]['id'], 'item_id'=>$usr[0]['item_id']]) }}")
+                    <script>
+                        function funDelete() {
+                            if (document.getElementById("funDelete").value == "DELETE") {
+                                window.location.assign(
+                                    "{{ route('deleteItem', ['id'=>$usr[0]['id'], 'item_id'=>$usr[0]['item_id']]) }}"
+                                    )
+                            }
                         }
-                    }
 
-                </script>
+                    </script>
 
-                <div class="card-body">
                     @if (session('status'))
                     <div class="alert alert-success" role="alert">
                         {{ session('status') }}
@@ -175,13 +182,17 @@
                             </div>
                         </div>
 
-                        <input type="file"  name="file_a">
-                        <input type="file" name="file_b">
 
                         <div class="form-group row mb-0 my-3">
                             <div class="col-md-6 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    <i class="fa fa-pencil"></i>
+                                <input type="file" name="file_a">
+                                <input type="file" name="file_b">
+                            </div>
+                        </div>
+
+                        <div class="form-group row mb-0 my-3">
+                            <div class="col-md-6 offset-md-4">
+                                <button type="submit" class="btn btn-login w-50">
                                     Update
                                 </button>
                             </div>
@@ -192,4 +203,4 @@
                 </div>
             </div>
 
-    @endsection
+            @endsection
